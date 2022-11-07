@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\CookingBook.Domain\CookingBook.Domain.csproj" />
+      <ProjectReference Include="..\CookingBook.Shared\CookingBook.Shared.csproj" />
+    </ItemGroup>
+
 </Project>
