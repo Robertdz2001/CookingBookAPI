@@ -34,7 +34,31 @@ public class Recipe
             throw new IngredientAlreadyExistsExeption(ingredient.Name);
         }
 
+        _calories += 1.0*ingredient.Grams/100.0 * ingredient.CaloriesPerHundredGrams;
+        
         _ingredients.AddLast(ingredient);
+    }
+
+    public void ChangeIngredient(Ingredient ingredient, string ingredientName)
+    {
+        var ingredientToChange = getIngredient(ingredientName);
+        
+        _calories -=1.0*ingredientToChange.Grams/100.0 * ingredientToChange.CaloriesPerHundredGrams;
+        
+        _ingredients.Find(ingredientToChange).Value = ingredient;
+        
+        _calories += 1.0*ingredient.Grams/100.0 * ingredient.CaloriesPerHundredGrams;
+    }
+    
+    private Ingredient getIngredient(string ingredientName)
+    {
+        var ingredient = _ingredients.FirstOrDefault(i => i.Name.Equals(ingredientName));
+
+        if (ingredient is null)
+        {
+            throw new IngredientNotFoundException(ingredientName);
+        }
+        return ingredient;
     }
 
 }

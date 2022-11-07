@@ -1,10 +1,10 @@
 ﻿namespace CookingBook.Domain.ValueObjects;
 
-public record RecipeCalories(ushort Value)
+public record RecipeCalories(double Value)
 {
-    public static implicit operator ushort(RecipeCalories kcal)
+    public static implicit operator double(RecipeCalories kcal)
         => kcal.Value;
 
-    public static implicit operator RecipeCalories(ushort kcal)
-        => new(kcal);
+    public static implicit operator RecipeCalories(double kcal)
+        => new(Math.Abs(kcal));
 }
