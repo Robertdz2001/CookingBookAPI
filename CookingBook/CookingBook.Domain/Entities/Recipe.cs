@@ -1,11 +1,13 @@
-﻿using CookingBook.Domain.Exceptions;
+﻿using CookingBook.Domain.Events;
+using CookingBook.Domain.Exceptions;
 using CookingBook.Domain.ValueObjects;
+using CookingBook.Shared.Abstractions.Domain;
 
 namespace CookingBook.Domain.Entities;
 
-public class Recipe
+public class Recipe : AggregateRoot<RecipeId>
 {
-    public RecipeId Id { get; private set; }
+    //public RecipeId Id from AggregateRoot
     private RecipeName _name;
     private RecipeImageUrl _imageUrl;
     private RecipePrepTime _prepTime; //in mins
@@ -28,7 +30,7 @@ public class Recipe
     public void AddIngredient(Ingredient ingredient)
     {
         var alreadyExists = _ingredients.Any(i => i.Name.Equals(ingredient.Name));
-
+        
         if (alreadyExists)
         {
             throw new IngredientAlreadyExistsExeption(ingredient.Name);
@@ -37,6 +39,8 @@ public class Recipe
         _calories += 1.0*ingredient.Grams/100.0 * ingredient.CaloriesPerHundredGrams;
         
         _ingredients.AddLast(ingredient);
+        
+        AddEvent(new IngredientAdded(this, ingredient));
     }
 
     public void ChangeIngredient(Ingredient ingredient, string ingredientName)
@@ -48,6 +52,8 @@ public class Recipe
         _ingredients.Find(ingredientToChange).Value = ingredient;
         
         _calories += ingredient.getCalories();
+        
+        AddEvent(new IngredientChanged(this, ingredientToChange));
     }
 
     public void RemoveIngredient(string ingredientName)
@@ -57,6 +63,8 @@ public class Recipe
         _calories -= ingredientToRemove.getCalories();
 
         _ingredients.Remove(ingredientToRemove);
+        
+        AddEvent(new IngredientRemoved(this, ingredientToRemove));
     }
     public void AddTool(Tool tool)
     {
@@ -66,9 +74,10 @@ public class Recipe
         {
             throw new ToolAlreadyExistsException(tool.Name);
         }
-
         
         _tools.AddLast(tool);
+        
+        AddEvent(new ToolAdded(this, tool));
     }
 
     public void ChangeTool(Tool tool, string toolName)
@@ -76,6 +85,8 @@ public class Recipe
         var toolToChange = getTool(toolName);
 
         _tools.Find(toolToChange).Value = tool;
+        
+        AddEvent(new ToolChanged(this, toolToChange));
     }
 
     public void RemoveTool(string toolName)
@@ -83,6 +94,8 @@ public class Recipe
         var toolToRemove = getTool(toolName);
 
         _tools.Remove(toolToRemove);
+        
+        AddEvent(new ToolRemoved(this, toolToRemove));
     }
     
     
@@ -96,8 +109,9 @@ public class Recipe
             throw new StepAlreadyExistsException(step.Name);
         }
         
-        
         _steps.AddLast(step);
+        
+        AddEvent(new StepAdded(this, step));
     }
 
     public void ChangeStep(Step step, string stepName)
@@ -105,6 +119,8 @@ public class Recipe
         var stepToChange = getStep(stepName);
 
         _steps.Find(stepToChange).Value = step;
+        
+        AddEvent(new StepChanged(this, stepToChange));
     }
 
     public void RemoveStep(string stepName)
@@ -112,6 +128,8 @@ public class Recipe
         var stepToRemove = getStep(stepName);
 
         _steps.Remove(stepToRemove);
+        
+        AddEvent(new StepRemoved(this, stepToRemove));
     }
     
     
