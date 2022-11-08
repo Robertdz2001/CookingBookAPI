@@ -58,16 +58,55 @@ public class Recipe
 
         _ingredients.Remove(ingredientToRemove);
     }
+    public void AddTool(Tool tool)
+    {
+        var alreadyExists = _tools.Any(t => t.Name.Equals(tool.Name));
+
+        if (alreadyExists)
+        {
+            throw new ToolAlreadyExistsException(tool.Name);
+        }
+
+        
+        _tools.AddLast(tool);
+    }
+
+    public void ChangeTool(Tool tool, string toolName)
+    {
+        var toolToChange = getTool(toolName);
+
+        _tools.Find(toolToChange).Value = tool;
+    }
+
+    public void RemoveTool(string toolName)
+    {
+        var toolToRemove = getTool(toolName);
+
+        _tools.Remove(toolToRemove);
+    }
+    
+    
     
     private Ingredient getIngredient(string ingredientName)
     {
-        var ingredient = _ingredients.FirstOrDefault(i => i.Name.Equals(ingredientName));
+        var ingredient = _ingredients.FirstOrDefault(t => t.Name.Equals(ingredientName));
 
         if (ingredient is null)
         {
             throw new IngredientNotFoundException(ingredientName);
         }
         return ingredient;
+    }
+    
+    private Tool getTool(string toolName)
+    {
+        var tool = _tools.FirstOrDefault(t => t.Name.Equals(toolName));
+
+        if (tool is null)
+        {
+            throw new ToolNotFoundException(toolName);
+        }
+        return tool;
     }
 
 }
