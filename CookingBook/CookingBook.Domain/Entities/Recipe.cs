@@ -87,6 +87,35 @@ public class Recipe
     
     
     
+    public void AddStep(Step step)
+    {
+        var alreadyExists = _steps.Any(s => s.Name.Equals(step.Name));
+
+        if (alreadyExists)
+        {
+            throw new StepAlreadyExistsException(step.Name);
+        }
+        
+        
+        _steps.AddLast(step);
+    }
+
+    public void ChangeStep(Step step, string stepName)
+    {
+        var stepToChange = getStep(stepName);
+
+        _steps.Find(stepToChange).Value = step;
+    }
+
+    public void RemoveStep(string stepName)
+    {
+        var stepToRemove = getStep(stepName);
+
+        _steps.Remove(stepToRemove);
+    }
+    
+    
+    
     private Ingredient getIngredient(string ingredientName)
     {
         var ingredient = _ingredients.FirstOrDefault(t => t.Name.Equals(ingredientName));
@@ -107,6 +136,16 @@ public class Recipe
             throw new ToolNotFoundException(toolName);
         }
         return tool;
+    }
+    private Step getStep(string stepName)
+    {
+        var step = _steps.FirstOrDefault(s => s.Name.Equals(stepName));
+
+        if (step is null)
+        {
+            throw new StepNotFoundException(stepName);
+        }
+        return step;
     }
 
 }

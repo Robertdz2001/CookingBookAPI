@@ -4,20 +4,20 @@ namespace CookingBook.Domain.ValueObjects;
 
 public class Step
 {
-    public string Value { get; set; }
+    public string Name { get; set; }
     
-    public Step(string value)
+    public Step(string name)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(name))
         {
             throw new EmptyStepNameException();
         }
         
-        Value = value;
+        Name = name;
     }
 
     public static implicit operator string(Step name)
-        => name.Value;
+        => name.Name;
 
     public static implicit operator Step(string name)
         => new(name);
