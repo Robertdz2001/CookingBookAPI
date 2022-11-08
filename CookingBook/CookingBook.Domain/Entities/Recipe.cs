@@ -42,12 +42,21 @@ public class Recipe
     public void ChangeIngredient(Ingredient ingredient, string ingredientName)
     {
         var ingredientToChange = getIngredient(ingredientName);
-        
-        _calories -=1.0*ingredientToChange.Grams/100.0 * ingredientToChange.CaloriesPerHundredGrams;
+
+        _calories -= ingredientToChange.getCalories();
         
         _ingredients.Find(ingredientToChange).Value = ingredient;
         
-        _calories += 1.0*ingredient.Grams/100.0 * ingredient.CaloriesPerHundredGrams;
+        _calories += ingredient.getCalories();
+    }
+
+    public void RemoveIngredient(string ingredientName)
+    {
+        var ingredientToRemove = getIngredient(ingredientName);
+        
+        _calories -= ingredientToRemove.getCalories();
+
+        _ingredients.Remove(ingredientToRemove);
     }
     
     private Ingredient getIngredient(string ingredientName)

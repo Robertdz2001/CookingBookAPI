@@ -18,4 +18,10 @@ public class Ingredient
         Grams = grams;
         CaloriesPerHundredGrams = caloriesPerHundredGrams;
     }
+
+    public double getCalories()
+        =>1.0*Grams/100.0 * CaloriesPerHundredGrams;
+        
+    
+        
 }
