@@ -17,7 +17,7 @@ public class Recipe : AggregateRoot<RecipeId>
     private LinkedList<Step> _steps =new();
     private LinkedList<Ingredient> _ingredients=new();
     
-    public Recipe(RecipeName name, RecipeImageUrl imageUrl, RecipePrepTime prepTime, RecipeCreatedDate createdDate, RecipeId id)
+    public Recipe(RecipeId id,RecipeName name, RecipeImageUrl imageUrl, RecipePrepTime prepTime, RecipeCreatedDate createdDate)
     {
         _name = name;
         _imageUrl = imageUrl;
