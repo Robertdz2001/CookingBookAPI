@@ -8,6 +8,8 @@ public class Ingredient
     public ushort Grams { get; set; }
     public ushort CaloriesPerHundredGrams { get; set; }
     
+    public RecipeId RecipeId { get; set; }
+    
     public Ingredient(string name, ushort grams, ushort caloriesPerHundredGrams)
     {
         if (string.IsNullOrWhiteSpace(name))

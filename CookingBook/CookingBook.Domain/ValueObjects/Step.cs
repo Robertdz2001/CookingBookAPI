@@ -6,6 +6,7 @@ public class Step
 {
     public string Name { get; set; }
     
+    public RecipeId RecipeId { get; set; }
     public Step(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
