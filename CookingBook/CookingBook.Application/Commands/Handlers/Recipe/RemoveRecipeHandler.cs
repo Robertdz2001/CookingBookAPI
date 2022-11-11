@@ -2,7 +2,7 @@
 using CookingBook.Domain;
 using CookingBook.Shared.Abstractions.Commands;
 
-namespace CookingBook.Application.Commands.Handlers;
+namespace CookingBook.Application.Commands.Handlers.Recipe;
 
 public class RemoveRecipeHandler : ICommandHandler<RemoveRecipe>
 {

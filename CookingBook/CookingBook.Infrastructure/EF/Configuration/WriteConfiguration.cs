@@ -41,12 +41,12 @@ public class WriteConfiguration: IEntityTypeConfiguration<Recipe>, IEntityTypeCo
         builder
             .Property(typeof(RecipeImageUrl), "_imageUrl")
             .HasConversion(recipeImageUrlConverter)
-            .HasColumnName("Image_Url");
+            .HasColumnName("ImageUrl");
         
         builder
             .Property(typeof(RecipePrepTime), "_prepTime")
             .HasConversion(recipePrepTimeConverter)
-            .HasColumnName("Preparation_Time");
+            .HasColumnName("PrepTime");
         
         builder
             .Property(typeof(RecipeCalories), "_calories")
@@ -56,7 +56,7 @@ public class WriteConfiguration: IEntityTypeConfiguration<Recipe>, IEntityTypeCo
         builder
             .Property(typeof(RecipeCreatedDate), "_createdDate")
             .HasConversion(recipeCreatedDateConverter)
-            .HasColumnName("Created_Date");
+            .HasColumnName("CreatedDate");
         
         builder.HasMany(typeof(Ingredient), "_ingredients");
         

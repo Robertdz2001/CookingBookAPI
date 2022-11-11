@@ -3,6 +3,7 @@
 public class RecipeReadModel
 {
     public Guid Id { get; set; }
+    public int Version { get; set; }
     public string Name { get; set; }
     public string ImageUrl{ get; set; }
     public ushort PrepTime{ get; set; }
