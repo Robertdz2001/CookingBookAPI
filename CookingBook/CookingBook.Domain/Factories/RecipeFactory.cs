@@ -6,7 +6,7 @@ namespace CookingBook.Domain.Factories;
 public class RecipeFactory : IRecipeFactory
 {
     public Recipe Create(RecipeId id, RecipeName name, RecipeImageUrl url, RecipePrepTime prepTime)
-        => new(id, name, url, prepTime, DateTime.Now);
+        => new(id, name, url, prepTime, DateTime.UtcNow);
 
 
 

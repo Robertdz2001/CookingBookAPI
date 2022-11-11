@@ -16,7 +16,7 @@ public sealed class InMemoryCommandDispatcher : ICommandDispatcher
     {
         using var scope = _serviceProvider.CreateScope();
 
-        var handler = _serviceProvider.GetRequiredService<ICommandHandler<ICommand>>();
+        var handler = _serviceProvider.GetRequiredService<ICommandHandler<TCommand>>();
 
         await handler.HandleAsync(command);
     }
