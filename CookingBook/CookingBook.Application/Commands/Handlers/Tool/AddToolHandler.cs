@@ -1,20 +1,20 @@
-﻿using CookingBook.Application.Commands.Step;
+﻿using CookingBook.Application.Commands.Tool;
 using CookingBook.Application.Exceptions;
 using CookingBook.Domain;
 using CookingBook.Shared.Abstractions.Commands;
 
-namespace CookingBook.Application.Commands.Handlers.Step;
+namespace CookingBook.Application.Commands.Handlers.Tool;
 
-public class ChangeStepHandler: ICommandHandler<ChangeStep>
+public class AddToolHandler : ICommandHandler<AddTool>
 {
     private readonly IRecipeRepository _repository;
 
-    public ChangeStepHandler(IRecipeRepository repository)
+    public AddToolHandler(IRecipeRepository repository)
     {
         _repository = repository;
     }
 
-    public async Task HandleAsync(ChangeStep command)
+    public async Task HandleAsync(AddTool command)
     {
         var recipe = await _repository.GetAsync(command.RecipeId);
 
@@ -23,10 +23,11 @@ public class ChangeStepHandler: ICommandHandler<ChangeStep>
             throw new RecipeNotFoundException(command.RecipeId);
         }
 
-        var step = new Domain.ValueObjects.Step(command.Name);
+        var newTool = new Domain.ValueObjects.Tool(command.Name, command.Quantity);
         
-        recipe.ChangeStep(step,command.StepToChangeName);
+        recipe.AddTool(newTool);
 
         await _repository.UpdateAsync(recipe);
+
     }
 }
