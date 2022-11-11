@@ -6,6 +6,8 @@ public class Tool
 {
     public string Name { get; set; }
     public ushort Quantity { get; set; }
+    
+    public RecipeId RecipeId { get; set; }
 
     public Tool(string name, ushort quantity)
     {
