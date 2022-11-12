@@ -12,15 +12,19 @@ public class CreateRecipeHandler : ICommandHandler<CreateRecipe>
     private readonly IRecipeFactory _factory;
     private readonly IRecipeRepository _repository;
     private readonly IRecipeReadService _readService;
-    
-    public CreateRecipeHandler(IRecipeFactory factory, IRecipeRepository repository, IRecipeReadService readService)
+    private readonly IUserContextService _userContext;
+
+    public CreateRecipeHandler(IRecipeFactory factory, IRecipeRepository repository
+        , IRecipeReadService readService, IUserRepository userRepository, IUserContextService userContext)
     {
         _factory = factory;
         _repository = repository;
         _readService = readService;
+        _userContext = userContext;
     }
     public async Task HandleAsync(CreateRecipe command)
     {
+        
         var alreadyExists = await _readService.ExistsById(command.Id);
 
         if (alreadyExists)
@@ -28,7 +32,7 @@ public class CreateRecipeHandler : ICommandHandler<CreateRecipe>
             throw new RecipeAlreadyExistsException(command.Id);
         }
 
-        var newRecipe = _factory.Create(command.Id, command.Name, command.ImageUrl, command.PrepTime);
+        var newRecipe = _factory.Create(_userContext.GetUserId,command.Id, command.Name, command.ImageUrl, command.PrepTime);
 
         await _repository.AddAsync(newRecipe);
 

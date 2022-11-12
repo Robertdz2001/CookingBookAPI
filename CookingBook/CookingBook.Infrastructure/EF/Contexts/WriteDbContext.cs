@@ -8,7 +8,7 @@ namespace CookingBook.Infrastructure.EF.Contexts;
 public class WriteDbContext : DbContext
 {
     public DbSet<Recipe> Recipes { get; set; }
-    
+    public DbSet<User> Users { get; set; }
     public WriteDbContext(DbContextOptions<WriteDbContext> options) : base(options){}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -16,6 +16,8 @@ public class WriteDbContext : DbContext
         modelBuilder.HasDefaultSchema("cookingBook");
 
         var configuration = new WriteConfiguration();
+        
+        modelBuilder.ApplyConfiguration<User>(configuration);
 
         modelBuilder.ApplyConfiguration<Recipe>(configuration);
 

@@ -7,10 +7,11 @@ using CookingBook.Application.DTO;
 using CookingBook.Application.Queries;
 using CookingBook.Shared.Abstractions.Commands;
 using CookingBook.Shared.Abstractions.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CookingBook.Api.Controllers;
-
+[Authorize]
 [Route("api/recipes")]
 public class RecipeController : BaseController
 {
