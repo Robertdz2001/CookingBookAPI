@@ -1,17 +1,23 @@
-﻿using CookingBook.Application.Commands.Step;
+﻿using CookingBook.Application.Authorization;
+using CookingBook.Application.Commands.Step;
 using CookingBook.Application.Exceptions;
+using CookingBook.Application.Services;
 using CookingBook.Domain;
 using CookingBook.Shared.Abstractions.Commands;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CookingBook.Application.Commands.Handlers.Step;
 
 public class ChangeStepHandler: ICommandHandler<ChangeStep>
 {
     private readonly IRecipeRepository _repository;
-
-    public ChangeStepHandler(IRecipeRepository repository)
+    private readonly IUserContextService _userContext;
+    private readonly IAuthorizationService _authorization;
+    public ChangeStepHandler(IRecipeRepository repository, IUserContextService userContext, IAuthorizationService authorization)
     {
         _repository = repository;
+        _userContext = userContext;
+        _authorization = authorization;
     }
 
     public async Task HandleAsync(ChangeStep command)
@@ -23,6 +29,14 @@ public class ChangeStepHandler: ICommandHandler<ChangeStep>
             throw new RecipeNotFoundException(command.RecipeId);
         }
 
+        var authorizationResult =  await _authorization
+            .AuthorizeAsync(_userContext.User, recipe,new ResourceOperationRequirement(ResourceOperation.Update));
+
+        if (!authorizationResult.Succeeded)
+        {
+            throw new ForbidException();
+        }
+        
         var step = new Domain.ValueObjects.Step(command.Name);
         
         recipe.ChangeStep(step,command.StepToChangeName);

@@ -5,9 +5,9 @@ using CookingBook.Shared.Abstractions.Commands;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CookingBook.Api.Controllers;
-
+[ApiController]
 [Route("api/user")]
-public class UserController : BaseController
+public class UserController : ControllerBase
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IGenerateJwtToken _jwtService;

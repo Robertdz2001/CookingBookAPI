@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CookingBook.Api.Controllers;
-[Authorize]
+
 [Route("api/recipes")]
 public class RecipeController : BaseController
 {
@@ -53,8 +53,10 @@ public class RecipeController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostRecipe([FromBody] CreateRecipe command)
+    public async Task<IActionResult> PostRecipe([FromBody] CreateRecipeDto dto)
     {
+        var command = new CreateRecipe(Guid.NewGuid(), dto.ImageUrl, dto.Name, dto.PrepTime);
+        
         await _commandDispatcher.DispatchAsync(command);
         
         return CreatedAtAction(nameof(Get), new {id=command.Id},null);

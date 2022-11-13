@@ -3,6 +3,7 @@ using CookingBook.Application.Services;
 using CookingBook.Domain;
 using CookingBook.Domain.Factories;
 using CookingBook.Shared.Abstractions.Commands;
+using IdGen;
 
 namespace CookingBook.Application.Commands.Handlers;
 
@@ -13,7 +14,6 @@ public class CreateRecipeHandler : ICommandHandler<CreateRecipe>
     private readonly IRecipeRepository _repository;
     private readonly IRecipeReadService _readService;
     private readonly IUserContextService _userContext;
-
     public CreateRecipeHandler(IRecipeFactory factory, IRecipeRepository repository
         , IRecipeReadService readService, IUserRepository userRepository, IUserContextService userContext)
     {
@@ -24,7 +24,6 @@ public class CreateRecipeHandler : ICommandHandler<CreateRecipe>
     }
     public async Task HandleAsync(CreateRecipe command)
     {
-        
         var alreadyExists = await _readService.ExistsById(command.Id);
 
         if (alreadyExists)
