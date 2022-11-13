@@ -1,6 +1,9 @@
-﻿namespace CookingBook.Application.Queries;
+﻿using CookingBook.Application.DTO;
+using CookingBook.Shared.Abstractions.Queries;
 
-public class GetUsersRecipes
+namespace CookingBook.Application.Queries;
+
+public class GetUsersRecipes : IQuery<IEnumerable<RecipeDto>>
 {
     
 }

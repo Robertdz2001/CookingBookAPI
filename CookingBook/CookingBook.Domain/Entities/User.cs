@@ -26,5 +26,9 @@ public class User
     {
         
     }
-    
+
+    public void SetUserRole(Role role)
+    {
+        _userRole = role;
+    }
 }
