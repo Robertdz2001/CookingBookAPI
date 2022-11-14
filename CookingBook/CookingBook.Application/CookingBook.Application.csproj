@@ -11,4 +11,10 @@
       <ProjectReference Include="..\CookingBook.Shared\CookingBook.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="IdGen" Version="3.0.2" />
+      <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.0-rc.2.22476.2" />
+      <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="7.0.0" />
+    </ItemGroup>
+
 </Project>

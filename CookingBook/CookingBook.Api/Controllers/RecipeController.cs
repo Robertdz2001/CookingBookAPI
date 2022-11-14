@@ -7,6 +7,7 @@ using CookingBook.Application.DTO;
 using CookingBook.Application.Queries;
 using CookingBook.Shared.Abstractions.Commands;
 using CookingBook.Shared.Abstractions.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CookingBook.Api.Controllers;
@@ -52,8 +53,10 @@ public class RecipeController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostRecipe([FromBody] CreateRecipe command)
+    public async Task<IActionResult> PostRecipe([FromBody] CreateRecipeDto dto)
     {
+        var command = new CreateRecipe(Guid.NewGuid(), dto.ImageUrl, dto.Name, dto.PrepTime);
+        
         await _commandDispatcher.DispatchAsync(command);
         
         return CreatedAtAction(nameof(Get), new {id=command.Id},null);

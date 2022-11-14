@@ -1,4 +1,5 @@
-﻿using CookingBook.Domain.Entities;
+﻿using CookingBook.Domain.Consts;
+using CookingBook.Domain.Entities;
 using CookingBook.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -6,9 +7,42 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CookingBook.Infrastructure.EF.Configuration;
 
-public class WriteConfiguration: IEntityTypeConfiguration<Recipe>, IEntityTypeConfiguration<Ingredient>
+public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfiguration<Recipe>, IEntityTypeConfiguration<Ingredient>
     , IEntityTypeConfiguration<Step>, IEntityTypeConfiguration<Tool>
 {
+    
+    public void Configure(EntityTypeBuilder<User> builder)
+    {
+        builder.ToTable("Users");
+        builder.HasKey(u => u.Id);
+        
+        var userNameConverter = new ValueConverter<UserName, string>(un => un.Value,
+            un => new UserName(un));
+        
+        var userPasswordHashConverter = new ValueConverter<PasswordHash, string>(p => p.Value,
+            p => new PasswordHash(p));
+        
+        builder
+            .Property(u => u.Id)
+            .HasConversion(id => id.Value, id => new UserId(id));
+        
+        builder
+            .Property(typeof(UserName), "_userName")
+            .HasConversion(userNameConverter)
+            .HasColumnName("UserName");
+        
+         builder
+             .Property(u=>u.PasswordHash)
+             .HasConversion(userPasswordHashConverter)
+             .HasColumnName("PasswordHash");
+        
+        builder
+            .Property(typeof(Role), "_userRole")
+            .HasColumnName("UserRole");
+        
+        builder.HasMany(typeof(Recipe), "_recipes");
+        
+    }
     public void Configure(EntityTypeBuilder<Recipe> builder)
     {
         builder.ToTable("Recipes");
@@ -32,6 +66,9 @@ public class WriteConfiguration: IEntityTypeConfiguration<Recipe>, IEntityTypeCo
         builder
             .Property(r => r.Id)
             .HasConversion(id => id.Value, id => new RecipeId(id));
+        
+        builder.Property(r=>r.UserId)
+            .HasConversion(id => id.Value, id => new UserId(id));
         
         builder
             .Property(typeof(RecipeName), "_name")
@@ -98,4 +135,6 @@ public class WriteConfiguration: IEntityTypeConfiguration<Recipe>, IEntityTypeCo
 
         builder.ToTable("Tools");
     }
+
+    
 }

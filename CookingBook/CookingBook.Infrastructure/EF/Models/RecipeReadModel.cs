@@ -12,4 +12,8 @@ public class RecipeReadModel
     public IEnumerable<ToolReadModel> Tools{ get; set; }
     public IEnumerable<StepReadModel> Steps { get; set; }
     public IEnumerable<IngredientReadModel> Ingredients{ get; set; }
+    
+    public Guid UserId { get; set; }
+    
+    public UserReadModel User { get; set; }
 }

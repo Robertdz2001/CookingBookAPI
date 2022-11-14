@@ -16,8 +16,9 @@ public static class Extensions
     public static IServiceCollection AddPostgres(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IRecipeRepository, PostgresRecipeRepository>();
+        services.AddScoped<IUserRepository, PostgresUserRepository>();
         services.AddScoped<IRecipeReadService, PostgresRecipeReadService>();
-
+        services.AddScoped<IUserReadService, PostgresUserReadService>();
         var options = configuration.GetOptions<PostgresOptions>("Postgres");
 
         services.AddDbContext<ReadDbContext>(ctx 

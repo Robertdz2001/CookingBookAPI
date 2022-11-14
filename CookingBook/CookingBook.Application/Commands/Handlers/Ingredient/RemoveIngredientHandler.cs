@@ -1,16 +1,22 @@
-﻿using CookingBook.Application.Exceptions;
+﻿using CookingBook.Application.Authorization;
+using CookingBook.Application.Exceptions;
+using CookingBook.Application.Services;
 using CookingBook.Domain;
 using CookingBook.Shared.Abstractions.Commands;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CookingBook.Application.Commands.Handlers;
 
 public class RemoveIngredientHandler : ICommandHandler<RemoveIngredient>
 {
     private readonly IRecipeRepository _repository;
-
-    public RemoveIngredientHandler(IRecipeRepository repository)
+    private readonly IUserContextService _userContext;
+    private readonly IAuthorizationService _authorization;
+    public RemoveIngredientHandler(IRecipeRepository repository, IUserContextService userContext, IAuthorizationService authorization)
     {
         _repository = repository;
+        _userContext = userContext;
+        _authorization = authorization;
     }
 
     public async Task HandleAsync(RemoveIngredient command)
@@ -20,6 +26,13 @@ public class RemoveIngredientHandler : ICommandHandler<RemoveIngredient>
         if (recipe is null)
         {
             throw new RecipeNotFoundException(command.RecipeId);
+        }
+        var authorizationResult =  await _authorization
+            .AuthorizeAsync(_userContext.User, recipe,new ResourceOperationRequirement(ResourceOperation.Update));
+
+        if (!authorizationResult.Succeeded)
+        {
+            throw new ForbidException();
         }
         
         recipe.RemoveIngredient(command.Name);

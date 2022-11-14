@@ -16,9 +16,12 @@ public class Recipe : AggregateRoot<RecipeId>
     private LinkedList<Tool> _tools =new();
     private LinkedList<Step> _steps =new();
     private LinkedList<Ingredient> _ingredients=new();
+    public UserId UserId { get; set; }
     
-    public Recipe(RecipeId id,RecipeName name, RecipeImageUrl imageUrl, RecipePrepTime prepTime, RecipeCreatedDate createdDate)
+    
+    public Recipe(UserId userId ,RecipeId id,RecipeName name, RecipeImageUrl imageUrl, RecipePrepTime prepTime, RecipeCreatedDate createdDate)
     {
+        UserId = userId;
         _name = name;
         _imageUrl = imageUrl;
         _prepTime = prepTime;
