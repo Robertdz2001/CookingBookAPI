@@ -19,7 +19,7 @@ public class User
         Id = id;
         _userName = userName;
         _userRole = userRole;
-        PasswordHash = "girnfgoinfd";
+        PasswordHash = passwordHash;
     }
 
     public User()
