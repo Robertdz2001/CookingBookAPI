@@ -1,4 +1,5 @@
 ﻿using CookingBook.Api.Authorize;
+using CookingBook.Api.Models;
 using CookingBook.Application.Commands.User;
 using CookingBook.Application.Queries;
 using CookingBook.Domain.Consts;
@@ -24,8 +25,10 @@ public class UserController : ControllerBase
 
     [HttpPost("register")]
 
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterUser command)
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto dto)
     {
+        var command = new RegisterUser(Guid.NewGuid(), dto.UserName, dto.Password, dto.ConfirmPassword);
+        
         await _commandDispatcher.DispatchAsync(command);
         
         return Ok();

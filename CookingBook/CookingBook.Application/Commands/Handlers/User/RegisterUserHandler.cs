@@ -38,7 +38,7 @@ public class RegisterUserHandler : ICommandHandler<RegisterUser>
             throw new PasswordsDontMatchException();
         }
 
-        var newUser = _factory.Create(command.Id, command.UserName,"", Role.User);
+        var newUser = _factory.Create(command.Id, command.UserName,"placeHolder", Role.User);
         
             
         var hashedPassword = _passwordHasher.HashPassword(newUser, command.Password);
