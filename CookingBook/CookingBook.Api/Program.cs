@@ -24,7 +24,7 @@ if (app.Environment.IsDevelopment())
 }
 SeedDatabase();
 app.UseHttpsRedirection();
-
+app.UseShared();
 app.UseAuthorization();
 
 app.MapControllers();

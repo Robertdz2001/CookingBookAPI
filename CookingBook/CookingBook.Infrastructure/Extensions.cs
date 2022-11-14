@@ -4,7 +4,9 @@ using CookingBook.Infrastructure.EF;
 using CookingBook.Infrastructure.EF.Models;
 using CookingBook.Infrastructure.EF.Options;
 using CookingBook.Infrastructure.Jwt;
+using CookingBook.Infrastructure.Logging;
 using CookingBook.Infrastructure.Services;
+using CookingBook.Shared.Abstractions.Commands;
 using CookingBook.Shared.Queries;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +27,7 @@ public static class Extensions
         services.AddQueries();
         services.AddJwt(configuration);
         
-        
+        services.TryDecorate(typeof(ICommandHandler<>),typeof(LoggingCommandHandlerDecorator<>));
         
 
         return services;

@@ -55,7 +55,7 @@ public class RecipeController : BaseController
     [HttpPost]
     public async Task<IActionResult> PostRecipe([FromBody] CreateRecipeDto dto)
     {
-        var command = new CreateRecipe(Guid.NewGuid(), dto.ImageUrl, dto.Name, dto.PrepTime);
+        var command = new CreateRecipe(Guid.NewGuid(), dto.Name, dto.ImageUrl, dto.PrepTime);
         
         await _commandDispatcher.DispatchAsync(command);
         
