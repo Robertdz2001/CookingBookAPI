@@ -1,42 +1,42 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using CookingBook.Application.Queries;
 using CookingBook.Infrastructure.EF.Contexts;
 using CookingBook.Infrastructure.EF.Models;
 using CookingBook.Infrastructure.EF.Options;
-using CookingBook.Infrastructure.Jwt.DTO;
 using CookingBook.Shared.Abstractions.Exceptions;
+using CookingBook.Shared.Abstractions.Queries;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace CookingBook.Infrastructure.Jwt.Services;
+namespace CookingBook.Infrastructure.EF.Queries.Handlers;
 
-public class GenerateJwtToken : IGenerateJwtToken
+public class GetJwtTokenHandler : IQueryHandler<GetJwtToken, string>
 {
     private readonly DbSet<UserReadModel> _users;
     private readonly IPasswordHasher<UserReadModel> _passwordHasher;
     private readonly AuthenticationSettings _authenticationSettings;
 
 
-    public GenerateJwtToken(ReadDbContext readDbContext, IPasswordHasher<UserReadModel> passwordHasher, AuthenticationSettings authenticationSettings)
+    public GetJwtTokenHandler(ReadDbContext readDbContext, IPasswordHasher<UserReadModel> passwordHasher, AuthenticationSettings authenticationSettings)
     {
         _passwordHasher = passwordHasher;
         _authenticationSettings = authenticationSettings;
         _users = readDbContext.Users;
     }
-
-    public async Task<string> Generate(LoginDto dto)
+    public async Task<string> HandleAsync(GetJwtToken query)
     {
         var user = await _users
-            .FirstOrDefaultAsync(u => u.UserName.Equals(dto.UserName));
+            .FirstOrDefaultAsync(u => u.UserName.Equals(query.Dto.UserName));
 
         if (user is null)
         {
             throw new CookingBookBadRequestException("Invalid userName or password");
         }
         
-        var result = _passwordHasher.VerifyHashedPassword(user,user.PasswordHash,dto.Password);
+        var result = _passwordHasher.VerifyHashedPassword(user,user.PasswordHash,query.Dto.Password);
         
         if(result == PasswordVerificationResult.Failed)
         {
