@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using CookingBook.Infrastructure.EF.Options;
-using CookingBook.Infrastructure.Jwt.Services;
 using CookingBook.Shared.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,8 +11,6 @@ public static class Extensions
 {
     public static IServiceCollection AddJwt(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IGenerateJwtToken, GenerateJwtToken>();
-        
         var options = configuration.GetOptions<AuthenticationSettings>("Authentication");
         
         
