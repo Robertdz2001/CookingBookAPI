@@ -1,5 +1,6 @@
 ﻿using CookingBook.Domain.Entities;
 using CookingBook.Domain.Exceptions;
+using CookingBook.Domain.ValueObjects;
 using Shouldly;
 
 namespace CookingBook.Domain.Tests;
@@ -34,5 +35,18 @@ public class UserTests
 
         exception.ShouldNotBeNull();
         exception.ShouldBeOfType<EmptyPasswordHashException>();
+    }
+    
+    
+    [Fact]
+    public void
+        UserConstructor_Creates_New_User_When_Proper_Parameters_Are_Given()
+    {
+        User user = new User(Guid.NewGuid(), "UserName123", "PasswordHash123");
+        
+        var exception = Record.Exception(() => user = new User(Guid.NewGuid(), "UserName", "PasswordHash"));
+
+        exception.ShouldBeNull();
+        user.PasswordHash.ShouldBeEquivalentTo((PasswordHash)"PasswordHash");
     }
 }
