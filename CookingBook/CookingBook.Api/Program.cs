@@ -1,6 +1,5 @@
 using CookingBook.Application;
 using CookingBook.Infrastructure;
-using CookingBook.Infrastructure.EF;
 using CookingBook.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +21,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-SeedDatabase();
+
 app.UseHttpsRedirection();
 app.UseShared();
 app.UseAuthorization();
@@ -30,14 +29,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
-
-void SeedDatabase()
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbInitializer = scope.ServiceProvider.GetRequiredService<Seeder>();
-        dbInitializer.Seed();
-    }
-}
