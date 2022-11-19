@@ -22,10 +22,6 @@ public class User
         PasswordHash = passwordHash;
     }
 
-    public User()
-    {
-        
-    }
 
     public void SetUserRole(Role role)
     {

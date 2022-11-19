@@ -36,7 +36,7 @@ public class Recipe : AggregateRoot<RecipeId>
         
         if (alreadyExists)
         {
-            throw new IngredientAlreadyExistsExeption(ingredient.Name);
+            throw new IngredientAlreadyExistsException(ingredient.Name);
         }
 
         _calories += 1.0*ingredient.Grams/100.0 * ingredient.CaloriesPerHundredGrams;
@@ -49,6 +49,13 @@ public class Recipe : AggregateRoot<RecipeId>
     public void ChangeIngredient(Ingredient ingredient, string ingredientName)
     {
         var ingredientToChange = getIngredient(ingredientName);
+        
+        var alreadyExists = _ingredients.Any(i => i.Name.Equals(ingredient.Name));
+        
+        if (alreadyExists)
+        {
+            throw new IngredientAlreadyExistsException(ingredient.Name);
+        }
 
         _calories -= ingredientToChange.getCalories();
         
@@ -86,6 +93,13 @@ public class Recipe : AggregateRoot<RecipeId>
     public void ChangeTool(Tool tool, string toolName)
     {
         var toolToChange = getTool(toolName);
+        
+        var alreadyExists = _tools.Any(t => t.Name.Equals(tool.Name));
+
+        if (alreadyExists)
+        {
+            throw new ToolAlreadyExistsException(tool.Name);
+        }
 
         _tools.Find(toolToChange).Value = tool;
         
@@ -120,6 +134,13 @@ public class Recipe : AggregateRoot<RecipeId>
     public void ChangeStep(Step step, string stepName)
     {
         var stepToChange = getStep(stepName);
+        
+        var alreadyExists = _steps.Any(s => s.Name.Equals(step.Name));
+
+        if (alreadyExists)
+        {
+            throw new StepAlreadyExistsException(step.Name);
+        }
 
         _steps.Find(stepToChange).Value = step;
         
