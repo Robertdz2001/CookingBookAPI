@@ -15,7 +15,7 @@ public class CreateRecipeHandler : ICommandHandler<CreateRecipe>
     private readonly IRecipeReadService _readService;
     private readonly IUserContextService _userContext;
     public CreateRecipeHandler(IRecipeFactory factory, IRecipeRepository repository
-        , IRecipeReadService readService, IUserRepository userRepository, IUserContextService userContext)
+        , IRecipeReadService readService, IUserContextService userContext)
     {
         _factory = factory;
         _repository = repository;
