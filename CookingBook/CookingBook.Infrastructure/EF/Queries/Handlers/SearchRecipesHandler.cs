@@ -25,7 +25,7 @@ public class SearchRecipesHandler : IQueryHandler<SearchRecipes,IEnumerable<Reci
         
         if (query.SearchPhrase is not null)
         {
-            dbQuery = dbQuery.Where(r => Microsoft.EntityFrameworkCore.EF.Functions.ILike(r.Name, $"%{query.SearchPhrase}%"));
+            dbQuery = dbQuery.Where(r => r.Name.Contains(query.SearchPhrase));
         }
 
         return await dbQuery

@@ -28,7 +28,7 @@ public class RecipeController : BaseController
     {
         var result = await _queryDispatcher.DispatchAsync(query);
 
-        return OkOrNotFound(result);
+        return Ok(result);
     }
     
     [HttpGet("{id:guid}")]
