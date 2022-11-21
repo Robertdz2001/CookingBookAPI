@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using System.Text;
+using CookingBook.Api.Models;
 using CookingBook.Domain.Entities;
 using CookingBook.Infrastructure.EF.Contexts;
 using CookingBook.Infrastructure.EF.Models;
@@ -187,6 +189,40 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
     
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         
+    }
+
+    [Fact]
+    public async Task
+        Post_Returns_BadRequest_When_Model_Name_Is_Empty()
+    {
+        var model = new CreateRecipeDto("", "Url", 30);
+
+        var json = JsonConvert.SerializeObject(model);
+
+        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+
+        var response = await _client.PostAsync("api/recipes", httpContent);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        
+    }
+    
+    [Fact]
+    public async Task
+        Post_Returns_Created_When_Model_Name_Is_Empty()
+    {
+        var model = new CreateRecipeDto("Name", "Url", 30);
+
+        var json = JsonConvert.SerializeObject(model);
+
+        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+
+        var response = await _client.PostAsync("api/recipes", httpContent);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.Created);
+
+        response.Headers.Location.ShouldNotBeNull();
+
     }
 
 
