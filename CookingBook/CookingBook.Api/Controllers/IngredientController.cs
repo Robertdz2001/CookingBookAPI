@@ -37,7 +37,7 @@ public class IngredientController : BaseController
         
         await _commandDispatcher.DispatchAsync(command);
 
-        return Ok();
+        return NoContent();
     }
     
     [HttpPut("{name}")]
