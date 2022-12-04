@@ -54,6 +54,27 @@ public class IngredientControllerTests: IClassFixture<WebApplicationFactory<Prog
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         
     }
+    [Fact]
+    public async Task
+        Post_Returns_BadRequest_When_Ingredient_Name_Is_Empty()
+    {
+        var model = new AddIngredientModel("", 30, 30);
+
+        var rid = Guid.NewGuid();
+        
+        var recipe = new Recipe(Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766"), rid, "Recipe", "Url", 39, DateTime.UtcNow);
+        
+        await _writeDbContext.AddAsync(recipe);
+        await _writeDbContext.SaveChangesAsync();
+        var json = JsonConvert.SerializeObject(model);
+        
+        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        
+        var response = await _client.PostAsync($"api/recipes/{rid}/ingredients", httpContent);
+        
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+
+    }
     
     [Fact]
     public async Task
@@ -103,6 +124,28 @@ public class IngredientControllerTests: IClassFixture<WebApplicationFactory<Prog
         
     }
     
+    
+    [Fact]
+    public async Task
+        Put_Returns_BadRequest_When_Ingredient_Name_Is_Empty()
+    {
+        var model = new AddIngredientModel("", 30, 30);
+        
+        var recipe =
+            GetUsersRecipeWithIngredient(Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766"), "IngredientToChange");
+        
+        await _writeDbContext.AddAsync(recipe);
+        await _writeDbContext.SaveChangesAsync();
+        
+        var json = JsonConvert.SerializeObject(model);
+        
+        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        
+        var response = await _client.PutAsync($"api/recipes/{(Guid)recipe.Id}/ingredients/IngredientToChange", httpContent);
+        
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        
+    }
     [Fact]
     public async Task
         Put_Returns_NotFound_When_There_Is_No_Recipe_With_Given_Id()

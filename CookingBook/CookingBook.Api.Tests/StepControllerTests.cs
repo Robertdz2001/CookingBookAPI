@@ -57,6 +57,29 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     
     [Fact]
     public async Task
+        Post_Returns_BadRequest_When_Step_Name_Is_Empty()
+    {
+        var model = new AddStepModel("");
+    
+        var rid = Guid.NewGuid();
+        
+        var recipe = new Recipe(Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766"), rid, "Recipe", "Url", 39, DateTime.UtcNow);
+        
+        await _writeDbContext.AddAsync(recipe);
+        await _writeDbContext.SaveChangesAsync();
+        var json = JsonConvert.SerializeObject(model);
+        
+        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        
+        var response = await _client.PostAsync($"api/recipes/{rid}/steps", httpContent);
+        
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+
+
+    }
+    
+    [Fact]
+    public async Task
         Post_Returns_Created_On_Success()
     {
         var model = new AddStepModel("Name");
@@ -85,7 +108,7 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         Put_Returns_Ok_On_Success()
     {
-        var model = new AddToolModel("Name", 30);
+        var model = new AddStepModel("Name");
         
         var recipe =
             GetUsersRecipeWithStep(Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766"), "StepToChange");
@@ -101,6 +124,27 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
         
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         
+    }
+    
+    [Fact]
+    public async Task
+        Put_Returns_BadRequest_When_Step_Name_Is_Empty()
+    {
+        var model = new AddStepModel("");
+        
+        var recipe =
+            GetUsersRecipeWithStep(Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766"), "StepToChange");
+        
+        await _writeDbContext.AddAsync(recipe);
+        await _writeDbContext.SaveChangesAsync();
+        
+        var json = JsonConvert.SerializeObject(model);
+        
+        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        
+        var response = await _client.PutAsync($"api/recipes/{(Guid)recipe.Id}/steps/StepToChange", httpContent);
+        
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
     
     [Fact]

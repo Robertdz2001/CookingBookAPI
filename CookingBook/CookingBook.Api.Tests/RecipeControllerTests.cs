@@ -206,7 +206,7 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
     
     [Fact]
     public async Task
-        Post_Returns_Created_When_Model_Name_Is_Empty()
+        Post_Returns_Created_When_Model_Name_Is_Not_Empty()
     {
         var model = new CreateRecipeDto("Name", "Url", 30);
 
