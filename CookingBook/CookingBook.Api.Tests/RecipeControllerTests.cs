@@ -16,73 +16,7 @@ namespace CookingBook.Api.Tests;
 
 public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>>
 {
-    private HttpClient _client;
-    private WebApplicationFactory<Program> _factory;
-    private ReadDbContext _readDbContext;
-    private WriteDbContext _writeDbContext;
-    public RecipeControllerTests(WebApplicationFactory<Program> factory)
-    {
-        
-        _factory = factory.WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureServices(services =>
-            {
-                var readDbContextOptions = services
-                    .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<ReadDbContext>));
-                
-                var writeDbContextOptions = services
-                    .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<WriteDbContext>));
-
-                services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
-                services.AddMvc(option => option.Filters.Add(new FakeUserFilter()));
-                
-                services.Remove(readDbContextOptions);
-                services.Remove(writeDbContextOptions);
-                services.AddDbContext<ReadDbContext>(options => options.UseInMemoryDatabase("ReadDb"));
-                services.AddDbContext<WriteDbContext>(options => options.UseInMemoryDatabase("WriteDb"));
-            });
-        });
-
-        _client = _factory.CreateClient();
-        
-        
-        var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
-
-        var scope = scopeFactory.CreateScope();
-
-        _readDbContext = scope.ServiceProvider.GetService<ReadDbContext>();
-        _writeDbContext = scope.ServiceProvider.GetService<WriteDbContext>();
-    }
-
-    public async Task InitDataBase()
-    {
-        if (!_readDbContext.Recipes.Any())
-        {
-            var recipes = new List<RecipeReadModel>()
-            {
-                new RecipeReadModel()
-                {
-                    Name = "Recipe1",
-                    ImageUrl = "Url1",
-                    Calories = 0,
-                    CreatedDate = DateTime.UtcNow,
-                    Id = Guid.NewGuid()
-                },
-                new RecipeReadModel()
-                {
-                    Name = "Recipe2",
-                    ImageUrl = "Url2",
-                    Calories = 0,
-                    CreatedDate = DateTime.UtcNow,
-                    Id = Guid.NewGuid()
-                }
-            };
-
-            await _readDbContext.Recipes.AddRangeAsync(recipes);
-            await _readDbContext.SaveChangesAsync();
-        }
-    }
-
+    #region GET
     [Theory]
     [InlineData("?SearchPhrase=Recipe1",1)]
     [InlineData("?SearchPhrase=Recipe",2)]
@@ -143,7 +77,67 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
+
+    [Fact]
+    public async Task
+        GetUserRecipes_Returns_IEnumerable_Of_Recipes_On_Success()
+    {
+        if (!_readDbContext.Recipes.Any())
+        {
+            await InitDataBase();
+        }
+        
+        var recipes = new List<RecipeReadModel>()
+        {
+            new RecipeReadModel()
+            {
+                Name = "Recipe1",
+                ImageUrl = "Url1",
+                Calories = 0,
+                CreatedDate = DateTime.UtcNow,
+                Id = Guid.NewGuid(),
+                UserId = Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766")
+            },
+            new RecipeReadModel()
+            {
+                Name = "Recipe2",
+                ImageUrl = "Url2",
+                Calories = 0,
+                CreatedDate = DateTime.UtcNow,
+                Id = Guid.NewGuid(),
+                UserId = Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766")
+                
+            },
+            new RecipeReadModel()
+            {
+                Name = "Recipe3",
+                ImageUrl = "Url2",
+                Calories = 0,
+                CreatedDate = DateTime.UtcNow,
+                Id = Guid.NewGuid(),
+                UserId = Guid.NewGuid()
+                
+            }
+            
+        };
+
+        await _readDbContext.Recipes.AddRangeAsync(recipes);
+        await _readDbContext.SaveChangesAsync();
+        
+        
+
+        var response = await _client.GetAsync("/api/recipes/user");
+
+        var responseJson = await response.Content.ReadAsStringAsync();
     
+        var responseRecipesList = JsonConvert.DeserializeObject<List<RecipeReadModel>>(responseJson);
+
+        responseRecipesList.Count.ShouldBe(2);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+    }
+    #endregion
+    
+    #region DELETE
     [Fact]
     public async Task
         Delete_Returns_NoContent_On_Success()
@@ -190,6 +184,9 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         
     }
+    #endregion
+    
+    #region POST
 
     [Fact]
     public async Task
@@ -224,6 +221,75 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
         response.Headers.Location.ShouldNotBeNull();
 
     }
+    #endregion
+    
+    #region ARRANGE
+    private HttpClient _client;
+    private WebApplicationFactory<Program> _factory;
+    private ReadDbContext _readDbContext;
+    private WriteDbContext _writeDbContext;
+    public RecipeControllerTests(WebApplicationFactory<Program> factory)
+    {
+        
+        _factory = factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                var readDbContextOptions = services
+                    .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<ReadDbContext>));
+                
+                var writeDbContextOptions = services
+                    .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<WriteDbContext>));
 
+                services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
+                services.AddMvc(option => option.Filters.Add(new FakeUserFilter()));
+                
+                services.Remove(readDbContextOptions);
+                services.Remove(writeDbContextOptions);
+                services.AddDbContext<ReadDbContext>(options => options.UseInMemoryDatabase("ReadDb"));
+                services.AddDbContext<WriteDbContext>(options => options.UseInMemoryDatabase("WriteDb"));
+            });
+        });
+
+        _client = _factory.CreateClient();
+        
+        
+        var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+
+        var scope = scopeFactory.CreateScope();
+
+        _readDbContext = scope.ServiceProvider.GetService<ReadDbContext>();
+        _writeDbContext = scope.ServiceProvider.GetService<WriteDbContext>();
+    }
+    public async Task InitDataBase()
+    {
+        if (!_readDbContext.Recipes.Any())
+        {
+            var recipes = new List<RecipeReadModel>()
+            {
+                new RecipeReadModel()
+                {
+                    Name = "Recipe1",
+                    ImageUrl = "Url1",
+                    Calories = 0,
+                    CreatedDate = DateTime.UtcNow,
+                    Id = Guid.NewGuid()
+                },
+                new RecipeReadModel()
+                {
+                    Name = "Recipe2",
+                    ImageUrl = "Url2",
+                    Calories = 0,
+                    CreatedDate = DateTime.UtcNow,
+                    Id = Guid.NewGuid()
+                }
+            };
+
+            await _readDbContext.Recipes.AddRangeAsync(recipes);
+            await _readDbContext.SaveChangesAsync();
+        }
+    }
+
+    #endregion
 
 }
