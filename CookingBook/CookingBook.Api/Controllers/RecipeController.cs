@@ -40,6 +40,16 @@ public class RecipeController : BaseController
 
         return OkOrNotFound(result);
     }
+    
+    
+    [HttpGet("user")]
+    public async Task<ActionResult> Get()
+    {
+        var result = await _queryDispatcher.DispatchAsync(new GetUsersRecipes());
+
+
+        return Ok(result);
+    }
 
     [HttpDelete("{id:guid}")]
 
