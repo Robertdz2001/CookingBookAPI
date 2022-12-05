@@ -1,18 +1,4 @@
-﻿using System.Net;
-using System.Text;
-using CookingBook.Api.Models;
-using CookingBook.Domain.Entities;
-using CookingBook.Infrastructure.EF.Contexts;
-using CookingBook.Infrastructure.EF.Models;
-using Microsoft.AspNetCore.Authorization.Policy;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Shouldly;
-
-
-namespace CookingBook.Api.Tests;
+﻿namespace CookingBook.Api.Tests;
 
 public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>>
 {
