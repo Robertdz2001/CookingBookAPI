@@ -8,55 +8,43 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         Post_Returns_NotFound_When_There_Is_No_Recipe_With_Given_Id()
     {
-        var model = new AddStepModel("Name");
-        
-        var json = JsonConvert.SerializeObject(model);
-        
-        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        var httpContent = GetHttpContentForAddStepModel("Name");
         
         var response = await _client.PostAsync($"api/recipes/{Guid.NewGuid()}/steps", httpContent);
         
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        
     }
     
     [Fact]
     public async Task
         Post_Returns_Unauthorized_When_User_Is_Not_Author_Or_Admin()
     {
-        var model = new AddStepModel("Name");
-    
         var rid = Guid.NewGuid();
         
         var recipe = new Recipe(Guid.NewGuid(), rid, "Recipe", "Url", 39, DateTime.UtcNow);
         
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
-        var json = JsonConvert.SerializeObject(model);
         
-        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        var httpContent = GetHttpContentForAddStepModel("Name");
         
         var response = await _client.PostAsync($"api/recipes/{rid}/steps", httpContent);
         
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
-        
     }
     
     [Fact]
     public async Task
         Post_Returns_BadRequest_When_Step_Name_Is_Empty()
     {
-        var model = new AddStepModel("");
-    
         var rid = Guid.NewGuid();
         
         var recipe = new Recipe(Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766"), rid, "Recipe", "Url", 39, DateTime.UtcNow);
         
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
-        var json = JsonConvert.SerializeObject(model);
         
-        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        var httpContent = GetHttpContentForAddStepModel("");
         
         var response = await _client.PostAsync($"api/recipes/{rid}/steps", httpContent);
         
@@ -69,17 +57,14 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         Post_Returns_Created_On_Success()
     {
-        var model = new AddStepModel("Name");
-    
         var rid = Guid.NewGuid();
         
         var recipe = new Recipe(Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766"), rid, "Recipe", "Url", 39, DateTime.UtcNow);
         
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
-        var json = JsonConvert.SerializeObject(model);
         
-        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        var httpContent = GetHttpContentForAddStepModel("Name");
         
         var response = await _client.PostAsync($"api/recipes/{rid}/steps", httpContent);
         
@@ -95,17 +80,13 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         Put_Returns_Ok_On_Success()
     {
-        var model = new AddStepModel("Name");
-        
         var recipe =
             GetUsersRecipeWithStep(Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766"), "StepToChange");
         
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
         
-        var json = JsonConvert.SerializeObject(model);
-        
-        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        var httpContent = GetHttpContentForAddStepModel("Name");
         
         var response = await _client.PutAsync($"api/recipes/{(Guid)recipe.Id}/steps/StepToChange", httpContent);
         
@@ -117,17 +98,13 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         Put_Returns_BadRequest_When_Step_Name_Is_Empty()
     {
-        var model = new AddStepModel("");
-        
         var recipe =
             GetUsersRecipeWithStep(Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766"), "StepToChange");
         
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
         
-        var json = JsonConvert.SerializeObject(model);
-        
-        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        var httpContent = GetHttpContentForAddStepModel("");
         
         var response = await _client.PutAsync($"api/recipes/{(Guid)recipe.Id}/steps/StepToChange", httpContent);
         
@@ -138,11 +115,7 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         Put_Returns_NotFound_When_There_Is_No_Recipe_With_Given_Id()
     {
-        var model = new AddStepModel("Name");
-    
-        var json = JsonConvert.SerializeObject(model);
-        
-        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        var httpContent = GetHttpContentForAddStepModel("Name");
         
         var response = await _client.PutAsync($"api/recipes/{Guid.NewGuid()}/steps/name", httpContent);
         
@@ -154,17 +127,13 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         Put_Returns_NotFound_When_There_Is_No_Step_With_Given_Name()
     {
-        var model = new AddStepModel("Name");
-        
         var recipe =
             GetUsersRecipeWithStep(Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766"), "StepToChange");
         
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
     
-        var json = JsonConvert.SerializeObject(model);
-        
-        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        var httpContent = GetHttpContentForAddStepModel("Name");
         
         var response = await _client.PutAsync($"api/recipes/{(Guid)recipe.Id}/steps/name", httpContent);
         
@@ -176,16 +145,12 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         Put_Returns_Unauthorized_When_User_Is_Not_Author_Or_Admin()
     {
-        var model = new AddStepModel("Name");
-        
         var recipe = GetUsersRecipeWithStep(Guid.NewGuid(),"StepToChange");
         
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
     
-        var json = JsonConvert.SerializeObject(model);
-        
-        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        var httpContent = GetHttpContentForAddStepModel("Name");
         
         var response = await _client.PutAsync($"api/recipes/{(Guid)recipe.Id}/steps/StepToChange", httpContent);
         
@@ -262,6 +227,17 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     private WebApplicationFactory<Program> _factory;
     private ReadDbContext _readDbContext;
     private WriteDbContext _writeDbContext;
+    
+    private StringContent? GetHttpContentForAddStepModel(string name)
+    {
+        var model = new AddStepModel(name);
+
+        var json = JsonConvert.SerializeObject(model);
+
+        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+
+        return httpContent;
+    }
     
     
     private Recipe GetUsersRecipeWithStep(Guid userId, string stepName)
