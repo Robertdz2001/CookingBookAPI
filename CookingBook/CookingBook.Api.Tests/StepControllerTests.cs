@@ -8,7 +8,9 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         Post_Returns_NotFound_When_There_Is_No_Recipe_With_Given_Id()
     {
-        var httpContent = GetHttpContentForAddStepModel("Name");
+        var model = new AddStepModel("Name");
+
+        var httpContent = model.GetHttpContentForModel();
         
         var response = await _client.PostAsync($"api/recipes/{Guid.NewGuid()}/steps", httpContent);
         
@@ -26,7 +28,9 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
         
-        var httpContent = GetHttpContentForAddStepModel("Name");
+        var model = new AddStepModel("Name");
+
+        var httpContent = model.GetHttpContentForModel();
         
         var response = await _client.PostAsync($"api/recipes/{rid}/steps", httpContent);
         
@@ -44,7 +48,9 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
         
-        var httpContent = GetHttpContentForAddStepModel("");
+        var model = new AddStepModel("");
+
+        var httpContent = model.GetHttpContentForModel();
         
         var response = await _client.PostAsync($"api/recipes/{rid}/steps", httpContent);
         
@@ -64,7 +70,9 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
         
-        var httpContent = GetHttpContentForAddStepModel("Name");
+        var model = new AddStepModel("Name");
+
+        var httpContent = model.GetHttpContentForModel();
         
         var response = await _client.PostAsync($"api/recipes/{rid}/steps", httpContent);
         
@@ -86,7 +94,9 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
         
-        var httpContent = GetHttpContentForAddStepModel("Name");
+        var model = new AddStepModel("Name");
+
+        var httpContent = model.GetHttpContentForModel();
         
         var response = await _client.PutAsync($"api/recipes/{(Guid)recipe.Id}/steps/StepToChange", httpContent);
         
@@ -104,7 +114,9 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
         
-        var httpContent = GetHttpContentForAddStepModel("");
+        var model = new AddStepModel("");
+
+        var httpContent = model.GetHttpContentForModel();
         
         var response = await _client.PutAsync($"api/recipes/{(Guid)recipe.Id}/steps/StepToChange", httpContent);
         
@@ -115,7 +127,9 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         Put_Returns_NotFound_When_There_Is_No_Recipe_With_Given_Id()
     {
-        var httpContent = GetHttpContentForAddStepModel("Name");
+        var model = new AddStepModel("Name");
+
+        var httpContent = model.GetHttpContentForModel();
         
         var response = await _client.PutAsync($"api/recipes/{Guid.NewGuid()}/steps/name", httpContent);
         
@@ -133,7 +147,9 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
     
-        var httpContent = GetHttpContentForAddStepModel("Name");
+        var model = new AddStepModel("Name");
+
+        var httpContent = model.GetHttpContentForModel();
         
         var response = await _client.PutAsync($"api/recipes/{(Guid)recipe.Id}/steps/name", httpContent);
         
@@ -150,7 +166,9 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
         await _writeDbContext.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
     
-        var httpContent = GetHttpContentForAddStepModel("Name");
+        var model = new AddStepModel("Name");
+
+        var httpContent = model.GetHttpContentForModel();
         
         var response = await _client.PutAsync($"api/recipes/{(Guid)recipe.Id}/steps/StepToChange", httpContent);
         
@@ -227,18 +245,6 @@ public class StepControllerTests: IClassFixture<WebApplicationFactory<Program>>
     private WebApplicationFactory<Program> _factory;
     private ReadDbContext _readDbContext;
     private WriteDbContext _writeDbContext;
-    
-    private StringContent? GetHttpContentForAddStepModel(string name)
-    {
-        var model = new AddStepModel(name);
-
-        var json = JsonConvert.SerializeObject(model);
-
-        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-
-        return httpContent;
-    }
-    
     
     private Recipe GetUsersRecipeWithStep(Guid userId, string stepName)
     {
