@@ -145,10 +145,8 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
     public async Task
         Delete_Returns_NotFound_When_There_Is_No_Recipe_With_Given_Id()
     {
-
         var response = await _client.DeleteAsync("/api/recipes/"+Guid.NewGuid());
-    
-    
+        
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         
     }
@@ -158,17 +156,14 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
     public async Task
         Delete_Returns_Forbid_When_User_Is_Not_Author_Or_Admin()
     {
-        
         var recipe = new Recipe(Guid.NewGuid(),Guid.NewGuid(),"Recipe123","Url",30,DateTime.UtcNow);
         
         await _writeDbContext.Recipes.AddAsync(recipe);
         await _writeDbContext.SaveChangesAsync();
         
         var response = await _client.DeleteAsync("/api/recipes/"+(Guid)recipe.Id);
-    
-    
-        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
     #endregion
     
@@ -178,13 +173,7 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
     public async Task
         Post_Returns_BadRequest_When_Model_Name_Is_Empty()
     {
-        var model = new CreateRecipeDto("", "Url", 30);
-
-        var json = JsonConvert.SerializeObject(model);
-
-        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-
-        var response = await _client.PostAsync("api/recipes", httpContent);
+        var response = await GetHttpPostResponseForRecipeModel("","Url",30);
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         
@@ -194,13 +183,7 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
     public async Task
         Post_Returns_Created_When_Model_Name_Is_Not_Empty()
     {
-        var model = new CreateRecipeDto("Name", "Url", 30);
-
-        var json = JsonConvert.SerializeObject(model);
-
-        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-
-        var response = await _client.PostAsync("api/recipes", httpContent);
+        var response = await GetHttpPostResponseForRecipeModel("Name","Url",30);
 
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
 
@@ -214,6 +197,20 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
     private WebApplicationFactory<Program> _factory;
     private ReadDbContext _readDbContext;
     private WriteDbContext _writeDbContext;
+
+    private async Task<HttpResponseMessage?> GetHttpPostResponseForRecipeModel(string name, string url, ushort prepTime)
+    {
+        var model = new CreateRecipeDto(name, url, prepTime);
+
+        var json = JsonConvert.SerializeObject(model);
+
+        var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        
+        var response = await _client.PostAsync("api/recipes", httpContent);
+
+        return response;
+
+    }
     public RecipeControllerTests(WebApplicationFactory<Program> factory)
     {
         
@@ -247,7 +244,8 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
         _readDbContext = scope.ServiceProvider.GetService<ReadDbContext>();
         _writeDbContext = scope.ServiceProvider.GetService<WriteDbContext>();
     }
-    public async Task InitDataBase()
+
+    private async Task InitDataBase()
     {
         if (!_readDbContext.Recipes.Any())
         {
