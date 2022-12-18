@@ -1,8 +1,6 @@
-﻿using CookingBook.Api.Authorize;
-using CookingBook.Api.Models;
+﻿using CookingBook.Api.Models;
 using CookingBook.Application.Commands.User;
 using CookingBook.Application.Queries;
-using CookingBook.Domain.Consts;
 using CookingBook.Infrastructure.Jwt.DTO;
 using CookingBook.Shared.Abstractions.Commands;
 using CookingBook.Shared.Abstractions.Queries;
@@ -43,11 +41,11 @@ public class UserController : ControllerBase
     }
     
 
-    [AuthorizeEnum(Role.Admin)]
+    [Authorize(Roles="Admin")]
     [HttpPut("{id:guid}/role")]
-    public async Task<ActionResult> ChangeRole([FromRoute] Guid id,[FromBody] Role role)
+    public async Task<ActionResult> ChangeRole([FromRoute] Guid id,[FromBody] int roleId)
     {
-        await _commandDispatcher.DispatchAsync(new ChangeUserRole(id, role));
+        await _commandDispatcher.DispatchAsync(new ChangeUserRole(id, roleId));
 
         return NoContent();
     }

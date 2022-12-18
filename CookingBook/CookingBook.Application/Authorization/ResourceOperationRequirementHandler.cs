@@ -1,7 +1,5 @@
 ﻿using System.Security.Claims;
-using CookingBook.Domain.Consts;
 using CookingBook.Domain.Entities;
-using CookingBook.Domain.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CookingBook.Application.Authorization;
@@ -18,9 +16,8 @@ public class ResourceOperationRequirementHandler : AuthorizationHandler<Resource
 
         var userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
         var userRole = context.User.FindFirst(c => c.Type == ClaimTypes.Role).Value;
-        Role userRoleEnum;
-        Role.TryParse(userRole,out userRoleEnum);
-        if (recipe.UserId.Equals(Guid.Parse(userId)) || userRoleEnum == Role.Admin)
+        
+        if (recipe.UserId.Equals(Guid.Parse(userId)) || userRole =="Admin")
         {
             context.Succeed(requirement);
         }

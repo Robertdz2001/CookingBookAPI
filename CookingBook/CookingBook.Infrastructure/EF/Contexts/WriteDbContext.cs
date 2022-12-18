@@ -9,6 +9,8 @@ public class WriteDbContext : DbContext
 {
     public DbSet<Recipe> Recipes { get; set; }
     public DbSet<User> Users { get; set; }
+    
+    public DbSet<Role> Roles { get; set; }
     public WriteDbContext(DbContextOptions<WriteDbContext> options) : base(options){}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,5 +1,4 @@
-﻿using CookingBook.Domain.Consts;
-using CookingBook.Domain.Entities;
+﻿using CookingBook.Domain.Entities;
 using CookingBook.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -35,10 +34,11 @@ public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfi
              .Property(u=>u.PasswordHash)
              .HasConversion(userPasswordHashConverter)
              .HasColumnName("PasswordHash");
-        
-        builder
-            .Property(typeof(Role), "_userRole")
-            .HasColumnName("UserRole");
+
+         builder.HasOne(u => u.Role)
+                .WithMany()
+                .HasForeignKey(u=>u.RoleId);
+
         
         builder.HasMany(typeof(Recipe), "_recipes");
         

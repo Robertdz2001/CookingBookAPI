@@ -14,7 +14,7 @@ public class FakeUserFilter : IAsyncActionFilter
             new []
             {
                 new Claim(ClaimTypes.NameIdentifier,"bb21ce33-ea66-4c56-aefc-5f8588f95766"),
-                new Claim(ClaimTypes.Role,"0")
+                new Claim(ClaimTypes.Role,"User")
             }));
         context.HttpContext.User = claimsPrincipal;
 

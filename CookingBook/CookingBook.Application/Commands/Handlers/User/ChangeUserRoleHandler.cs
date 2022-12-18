@@ -24,7 +24,7 @@ public class ChangeUserRoleHandler : ICommandHandler<ChangeUserRole>
             throw new UserNotFoundException(command.Id);
         }
 
-        user.SetUserRole(command.Role);
+        user.SetUserRole(command.RoleId);
 
         await _repository.UpdateAsync(user);
     }

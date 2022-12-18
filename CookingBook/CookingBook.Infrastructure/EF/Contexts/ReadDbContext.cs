@@ -11,6 +11,7 @@ public class ReadDbContext : DbContext
     public DbSet<RecipeReadModel> Recipes { get; set; }
     public DbSet<UserReadModel> Users { get; set; }
 
+    public DbSet<Role> Roles { get; set; }
     public ReadDbContext(DbContextOptions<ReadDbContext> options) : base(options){}
     
     
@@ -19,6 +20,8 @@ public class ReadDbContext : DbContext
         modelBuilder.HasDefaultSchema("cookingBook");
 
         var configuration = new ReadConfiguration();
+        
+        modelBuilder.ApplyConfiguration<Role>(configuration);
         
         modelBuilder.ApplyConfiguration<UserReadModel>(configuration);
 
