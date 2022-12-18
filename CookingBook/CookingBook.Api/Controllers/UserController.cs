@@ -41,15 +41,7 @@ public class UserController : ControllerBase
 
         return Ok(token);
     }
-    [Authorize]
-    [HttpGet("recipes")]
-    public async Task<ActionResult> Get()
-    {
-        var result = await _queryDispatcher.DispatchAsync(new GetUsersRecipes());
-
-
-        return Ok(result);
-    }
+    
 
     [AuthorizeEnum(Role.Admin)]
     [HttpPut("{id:guid}/role")]

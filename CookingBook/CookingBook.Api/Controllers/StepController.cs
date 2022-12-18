@@ -28,7 +28,7 @@ public class StepController : BaseController
         
         await _commandDispatcher.DispatchAsync(command);
 
-        return Ok();
+        return Created($"api/recipes/{RecipeId}/steps/{model.Name}",null);
     }
     
     [HttpDelete("{name}")]
@@ -39,7 +39,7 @@ public class StepController : BaseController
         
         await _commandDispatcher.DispatchAsync(command);
 
-        return Ok();
+        return NoContent();
     }
     [HttpPut("{name}")]
 

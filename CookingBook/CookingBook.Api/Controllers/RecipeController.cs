@@ -24,21 +24,31 @@ public class RecipeController : BaseController
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<RecipeDto>>> Get([FromQuery] SearchRecipes query)
+    public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes([FromQuery] SearchRecipes query)
     {
         var result = await _queryDispatcher.DispatchAsync(query);
 
-        return OkOrNotFound(result);
+        return Ok(result);
     }
     
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<RecipeDto>> Get([FromRoute] Guid id)
+    public async Task<ActionResult<RecipeDto>> GetRecipe([FromRoute] Guid id)
     {
         var query = new GetRecipe { Id = id };
         
         var result = await _queryDispatcher.DispatchAsync(query);
 
         return OkOrNotFound(result);
+    }
+    
+    
+    [HttpGet("user")]
+    public async Task<ActionResult> GetUserRecipes()
+    {
+        var result = await _queryDispatcher.DispatchAsync(new GetUsersRecipes());
+
+
+        return Ok(result);
     }
 
     [HttpDelete("{id:guid}")]
@@ -59,7 +69,7 @@ public class RecipeController : BaseController
         
         await _commandDispatcher.DispatchAsync(command);
         
-        return CreatedAtAction(nameof(Get), new {id=command.Id},null);
+        return CreatedAtAction(nameof(GetRecipe), new {id=command.Id},null);
     }
     
     

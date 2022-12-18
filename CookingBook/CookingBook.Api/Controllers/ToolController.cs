@@ -20,13 +20,13 @@ public class ToolController : BaseController
     }
     [HttpPost]
 
-    public async Task<IActionResult> Put([FromRoute] Guid RecipeId, [FromBody] AddToolModel model)
+    public async Task<IActionResult> Post([FromRoute] Guid RecipeId, [FromBody] AddToolModel model)
     {
         var command = new AddTool(RecipeId, model.Name, model.Quantity);
         
         await _commandDispatcher.DispatchAsync(command);
 
-        return Ok();
+        return Created($"api/recipes/{RecipeId}/tools/{model.Name}",null);
     }
     
     [HttpDelete("{name}")]
@@ -37,7 +37,7 @@ public class ToolController : BaseController
         
         await _commandDispatcher.DispatchAsync(command);
 
-        return Ok();
+        return NoContent();
     }
     
     [HttpPut("{name}")]

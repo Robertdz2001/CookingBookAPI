@@ -27,7 +27,7 @@ public class IngredientController : BaseController
         
         await _commandDispatcher.DispatchAsync(command);
 
-        return Ok();
+        return Created($"api/recipes/{RecipeId}/ingredients/{model.Name}",null);
     }
     [HttpDelete("{name}")]
 
@@ -37,7 +37,7 @@ public class IngredientController : BaseController
         
         await _commandDispatcher.DispatchAsync(command);
 
-        return Ok();
+        return NoContent();
     }
     
     [HttpPut("{name}")]

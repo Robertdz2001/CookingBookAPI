@@ -31,7 +31,10 @@ public class AppInitializer : IHostedService
                 continue;
             }
 
-            await dbContext.Database.MigrateAsync(cancellationToken);
+            if (dbContext.Database.IsRelational())
+            {
+                await dbContext.Database.MigrateAsync(cancellationToken);
+            }
         }
 
             

@@ -1,0 +1,16 @@
+global using Xunit;
+global using System.Net;
+global using System.Text;
+global using CookingBook.Api.Models;
+global using CookingBook.Domain.Consts;
+global using CookingBook.Domain.Entities;
+global using CookingBook.Infrastructure.EF.Contexts;
+global using CookingBook.Infrastructure.EF.Models;
+global using CookingBook.Infrastructure.Jwt.DTO;
+global using Microsoft.AspNetCore.Authorization.Policy;
+global using Microsoft.AspNetCore.Mvc.Testing;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.DependencyInjection;
+global using Newtonsoft.Json;
+global using Shouldly;
+global using CookingBook.Domain.ValueObjects;
