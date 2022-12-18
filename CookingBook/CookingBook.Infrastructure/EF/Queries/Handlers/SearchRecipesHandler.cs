@@ -1,4 +1,5 @@
-﻿using CookingBook.Application.DTO;
+﻿using System.Linq.Expressions;
+using CookingBook.Application.DTO;
 using CookingBook.Application.Queries;
 using CookingBook.Infrastructure.EF.Contexts;
 using CookingBook.Infrastructure.EF.Models;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CookingBook.Infrastructure.EF.Queries.Handlers;
 
-public class SearchRecipesHandler : IQueryHandler<SearchRecipes,IEnumerable<RecipeDto>>
+public class SearchRecipesHandler : IQueryHandler<SearchRecipes,PagedResult<RecipeDto>>
 {
     private readonly DbSet<RecipeReadModel> _recipes;
 
@@ -15,21 +16,44 @@ public class SearchRecipesHandler : IQueryHandler<SearchRecipes,IEnumerable<Reci
     {
         _recipes = readDbContext.Recipes;
     }
-    public async Task<IEnumerable<RecipeDto>> HandleAsync(SearchRecipes query)
+    public async Task<PagedResult<RecipeDto>> HandleAsync(SearchRecipes query)
     {
         var dbQuery = _recipes
             .Include(r => r.Ingredients)
             .Include(r => r.Steps)
             .Include(r => r.Tools)
             .AsQueryable();
+
+        var totalCount = dbQuery.Count();
         
         if (query.SearchPhrase is not null)
         {
             dbQuery = dbQuery.Where(r => r.Name.Contains(query.SearchPhrase));
         }
 
-        return await dbQuery
-            .Select(r=>r.AsDto())
-            .ToListAsync();
+        if (query.SortBy is not null)
+        {
+            var columnsSelector = new Dictionary<SortByOptions?, Expression<Func<RecipeReadModel, object>>>
+            {
+                { SortByOptions.Name , recipe=>recipe.Name},
+                { SortByOptions.Calories , recipe=>recipe.Calories},
+                { SortByOptions.PrepTime , recipe=>recipe.PrepTime},
+                { SortByOptions.CreatedDate , recipe=>recipe.CreatedDate}
+            };
+
+            var sortByExpression = columnsSelector[query.SortBy];
+
+            dbQuery = query.SortByDescending ? dbQuery.OrderByDescending(sortByExpression) : dbQuery.OrderBy(sortByExpression);
+        }
+
+        var result = await dbQuery
+                                            .Skip(query.PageSize * (query.PageNumber - 1))
+                                            .Take(query.PageSize)
+                                            .Select(r=>r.AsDto())
+                                            .ToListAsync();
+
+        var pagedResult = new PagedResult<RecipeDto>(result, totalCount, query.PageSize, query.PageNumber);
+
+        return pagedResult;
     }
 }
