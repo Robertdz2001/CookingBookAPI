@@ -1,5 +1,4 @@
-﻿using CookingBook.Domain.Consts;
-using CookingBook.Domain.ValueObjects;
+﻿using CookingBook.Domain.ValueObjects;
 
 namespace CookingBook.Domain.Entities;
 
@@ -13,18 +12,21 @@ public class User
 
     private LinkedList<Recipe> _recipes = new();
 
-    private Role _userRole;
-    public User(UserId id, UserName userName,  PasswordHash passwordHash,Role userRole=0)
+    public Role Role;
+    
+    public int RoleId;
+    public User(UserId id, UserName userName,  PasswordHash passwordHash,int roleId=1)
     {
         Id = id;
         _userName = userName;
-        _userRole = userRole;
+        RoleId = roleId;
         PasswordHash = passwordHash;
     }
+    
+    public User(){}
 
-
-    public void SetUserRole(Role role)
+    public void SetUserRole(int roleId)
     {
-        _userRole = role;
+        RoleId = roleId;
     }
 }

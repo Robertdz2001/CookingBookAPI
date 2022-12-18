@@ -3,7 +3,6 @@ using CookingBook.Application.Commands.User;
 using CookingBook.Application.Exceptions;
 using CookingBook.Application.Services;
 using CookingBook.Domain;
-using CookingBook.Domain.Consts;
 using CookingBook.Domain.Factories;
 using CookingBook.Shared.Abstractions.Commands;
 using Microsoft.AspNetCore.Identity;
@@ -56,7 +55,7 @@ public class RegisterUserHandlerTests
         
         _readService.ExistsByUserName(command.UserName).Returns(false);
 
-        _factory.Create(command.Id, command.UserName, "placeHolder", Role.User).ReturnsForAnyArgs(user);
+        _factory.Create(command.Id, command.UserName, "placeHolder", 1).ReturnsForAnyArgs(user);
         
         _passwordHasher.HashPassword(user, command.Password).Returns("PasswordHash");
 

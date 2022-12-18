@@ -1,5 +1,4 @@
-﻿using CookingBook.Domain.Consts;
-using CookingBook.Shared.Abstractions.Commands;
+﻿using CookingBook.Shared.Abstractions.Commands;
 
 namespace CookingBook.Application.Commands.User;
 

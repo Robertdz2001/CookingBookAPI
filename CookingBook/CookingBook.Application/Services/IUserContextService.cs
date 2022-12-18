@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using CookingBook.Domain.Consts;
+using CookingBook.Domain.Entities;
 
 namespace CookingBook.Application.Services;
 
@@ -8,5 +8,5 @@ public interface IUserContextService
     ClaimsPrincipal User { get; }
     Guid? GetUserId { get; }
     
-    Role? GetUserRole { get; }
+    string? GetUserRole { get; }
 }

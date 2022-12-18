@@ -2,7 +2,6 @@ global using Xunit;
 global using System.Net;
 global using System.Text;
 global using CookingBook.Api.Models;
-global using CookingBook.Domain.Consts;
 global using CookingBook.Domain.Entities;
 global using CookingBook.Infrastructure.EF.Contexts;
 global using CookingBook.Infrastructure.EF.Models;

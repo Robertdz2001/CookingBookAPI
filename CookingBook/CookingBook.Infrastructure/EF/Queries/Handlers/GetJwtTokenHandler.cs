@@ -16,6 +16,7 @@ namespace CookingBook.Infrastructure.EF.Queries.Handlers;
 public class GetJwtTokenHandler : IQueryHandler<GetJwtToken, string>
 {
     private readonly DbSet<UserReadModel> _users;
+    private readonly ReadDbContext _context;
     private readonly IPasswordHasher<UserReadModel> _passwordHasher;
     private readonly AuthenticationSettings _authenticationSettings;
 
@@ -29,8 +30,8 @@ public class GetJwtTokenHandler : IQueryHandler<GetJwtToken, string>
     public async Task<string> HandleAsync(GetJwtToken query)
     {
         var user = await _users
-            .FirstOrDefaultAsync(u => u.UserName.Equals(query.Dto.UserName));
-
+                                .Include(u=>u.Role)
+                                .FirstOrDefaultAsync(u => u.UserName.Equals(query.Dto.UserName));
         if (user is null)
         {
             throw new CookingBookBadRequestException("Invalid userName or password");
@@ -47,7 +48,7 @@ public class GetJwtTokenHandler : IQueryHandler<GetJwtToken, string>
         { 
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, $"{user.UserName}"),
-            new Claim(ClaimTypes.Role, $"{user.UserRole}"),
+            new Claim(ClaimTypes.Role, $"{user.Role.Name}"),
         };
         
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));

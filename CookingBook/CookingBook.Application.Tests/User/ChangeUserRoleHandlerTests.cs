@@ -2,8 +2,6 @@
 using CookingBook.Application.Commands.User;
 using CookingBook.Application.Exceptions;
 using CookingBook.Domain;
-using CookingBook.Domain.Consts;
-using CookingBook.Domain.Factories;
 using CookingBook.Shared.Abstractions.Commands;
 using NSubstitute;
 using Shouldly;
@@ -17,7 +15,7 @@ public class ChangeUserRoleHandlerTests
     public async Task
         HandleAsync_Throws_UserNotFoundException_When_There_Is_No_User_With_Given_Id()
     {
-        var command = new ChangeUserRole(Guid.NewGuid(), Role.User);
+        var command = new ChangeUserRole(Guid.NewGuid(), 1);
 
         _repository.GetAsync(command.Id).Returns(default(Domain.Entities.User));
 
@@ -35,7 +33,7 @@ public class ChangeUserRoleHandlerTests
     public async Task
         HandleAsync_Calls_Repository_On_Success()
     {
-        var command = new ChangeUserRole(Guid.NewGuid(), Role.User);
+        var command = new ChangeUserRole(Guid.NewGuid(), 1);
     
         var user = new Domain.Entities.User(command.Id, "UserName", "PasswordHash");
     

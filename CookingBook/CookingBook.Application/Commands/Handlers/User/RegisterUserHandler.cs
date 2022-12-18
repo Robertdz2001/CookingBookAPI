@@ -2,7 +2,6 @@
 using CookingBook.Application.Exceptions;
 using CookingBook.Application.Services;
 using CookingBook.Domain;
-using CookingBook.Domain.Consts;
 using CookingBook.Domain.Factories;
 using CookingBook.Shared.Abstractions.Commands;
 using Microsoft.AspNetCore.Identity;
@@ -38,7 +37,7 @@ public class RegisterUserHandler : ICommandHandler<RegisterUser>
             throw new PasswordsDontMatchException();
         }
 
-        var newUser = _factory.Create(command.Id, command.UserName,"placeHolder", Role.User);
+        var newUser = _factory.Create(command.Id, command.UserName,"placeHolder", 1);
         
             
         var hashedPassword = _passwordHasher.HashPassword(newUser, command.Password);

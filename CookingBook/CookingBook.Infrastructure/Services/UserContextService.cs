@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using CookingBook.Application.Services;
-using CookingBook.Domain.Consts;
+using CookingBook.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace CookingBook.Infrastructure.Services;
@@ -20,6 +20,6 @@ public class UserContextService : IUserContextService
     public Guid? GetUserId =>
         User is null ? null : (Guid?)Guid.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
     
-    public Role? GetUserRole =>
-        User is null ? null :(Role?) Enum.Parse(typeof(Role),User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+    public string? GetUserRole =>
+        User is null ? null : User.FindFirst(c => c.Type == ClaimTypes.Role).Value;
 }

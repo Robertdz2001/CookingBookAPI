@@ -24,6 +24,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseShared();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -8,9 +8,9 @@ public class UserControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         ChangeRole_Returns_NotFound_When_There_Is_No_User_With_Given_Id()
     {
-        var role = Role.User;
+        var roleId = 1;
         
-        var json = JsonConvert.SerializeObject(role);
+        var json = JsonConvert.SerializeObject(roleId);
         
         var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
         
@@ -27,9 +27,9 @@ public class UserControllerTests: IClassFixture<WebApplicationFactory<Program>>
         var user = new User(Guid.NewGuid(), "Name", "Password");
         await _writeDbContext.Users.AddAsync(user);
         await _writeDbContext.SaveChangesAsync();
-        var role = Role.Admin;
+        var roleId = 2;
         
-        var json = JsonConvert.SerializeObject(role);
+        var json = JsonConvert.SerializeObject(roleId);
         
         var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
         
@@ -120,12 +120,14 @@ public class UserControllerTests: IClassFixture<WebApplicationFactory<Program>>
 
     private async Task<StringContent?> SeedDatabaseAndGetHttpContentForLogin(string userNameToSeed, string passwordToSeed, string userNameDto,string passwordDto)
     {
+        
         var newUser = new UserReadModel
         {
             UserName = userNameToSeed,
             PasswordHash = passwordToSeed,
+            RoleId = 1
         
-        }; 
+        };
         
         await _readDbContext.Users.AddAsync(newUser);
         await _readDbContext.SaveChangesAsync();
@@ -177,6 +179,25 @@ public class UserControllerTests: IClassFixture<WebApplicationFactory<Program>>
 
         _readDbContext = scope.ServiceProvider.GetService<ReadDbContext>();
         _writeDbContext = scope.ServiceProvider.GetService<WriteDbContext>();
+
+        if (!_readDbContext.Roles.Any())
+        {
+            var roles = new List<Role>
+            {
+                new Role
+                {
+                    Id = 1,
+                    Name = "User"
+                },
+                new Role
+                {
+                    Id = 2,
+                    Name = "Admin"
+                },
+            };
+            _readDbContext.Roles.AddRange(roles);
+        }
+
     }
     
 

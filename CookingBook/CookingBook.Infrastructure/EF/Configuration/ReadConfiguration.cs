@@ -1,14 +1,18 @@
-﻿using CookingBook.Domain.Consts;
+﻿using CookingBook.Domain.Entities;
 using CookingBook.Infrastructure.EF.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CookingBook.Infrastructure.EF.Configuration;
 
-internal sealed class ReadConfiguration:IEntityTypeConfiguration<UserReadModel> ,IEntityTypeConfiguration<RecipeReadModel>, IEntityTypeConfiguration<IngredientReadModel>
+internal sealed class ReadConfiguration: IEntityTypeConfiguration<Role>,IEntityTypeConfiguration<UserReadModel> ,IEntityTypeConfiguration<RecipeReadModel>, IEntityTypeConfiguration<IngredientReadModel>
     , IEntityTypeConfiguration<StepReadModel>, IEntityTypeConfiguration<ToolReadModel>
 {
-    
+    public void Configure(EntityTypeBuilder<Role> builder)
+    {
+        builder.ToTable("Roles");
+        builder.HasData(GetRoles());
+    }
     public void Configure(EntityTypeBuilder<UserReadModel> builder)
     {
         builder.ToTable("Users");
@@ -17,6 +21,10 @@ internal sealed class ReadConfiguration:IEntityTypeConfiguration<UserReadModel> 
         builder
             .HasMany(u => u.Recipes)
             .WithOne(u => u.User);
+        
+        builder.HasOne(u => u.Role)
+               .WithMany()
+               .HasForeignKey(u=>u.RoleId);
 
         builder.HasData(GetUsers());
     }
@@ -58,8 +66,7 @@ internal sealed class ReadConfiguration:IEntityTypeConfiguration<UserReadModel> 
         builder.ToTable("Tools");
         builder.HasData(GetTools());
     }
-
-   
+    
     
     
     private readonly Guid uid = Guid.NewGuid();
@@ -74,7 +81,7 @@ internal sealed class ReadConfiguration:IEntityTypeConfiguration<UserReadModel> 
                  Id = uid,
                  UserName = "Bill",
                  PasswordHash = "AQAAAAIAAYagAAAAEJ9Izg7Vu9QS7EbdzZZOWpf2B3ubMdSV7VbYwcL3apdXoXg9/N9uOlxH1K20XOz4BQ==", //12345
-                 UserRole = Role.Admin,
+                 RoleId = 2,
 
              },
              new UserReadModel()
@@ -82,12 +89,33 @@ internal sealed class ReadConfiguration:IEntityTypeConfiguration<UserReadModel> 
                  Id = Guid.NewGuid(),
                  UserName = "John",
                  PasswordHash = "AQAAAAIAAYagAAAAEJ9Izg7Vu9QS7EbdzZZOWpf2B3ubMdSV7VbYwcL3apdXoXg9/N9uOlxH1K20XOz4BQ==",
-                 UserRole = Role.User,
+                 RoleId = 1,
                  Recipes = new List<RecipeReadModel>()
              }
      };
 
         return users;
+    }
+    
+    private IEnumerable<Role> GetRoles()
+    {
+        
+        var roles = new List<Role>
+        {
+            new Role()
+            {
+                Id = 1,
+                Name = "User"
+
+            },
+            new Role()
+            {
+                Id = 2,
+                Name = "Admin"
+            }
+        };
+
+        return roles;
     }
 
     private IEnumerable<RecipeReadModel> GetRecipes()

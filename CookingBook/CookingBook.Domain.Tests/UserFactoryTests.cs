@@ -1,5 +1,4 @@
-﻿using CookingBook.Domain.Consts;
-using CookingBook.Domain.Entities;
+﻿using CookingBook.Domain.Entities;
 using CookingBook.Domain.Exceptions;
 using CookingBook.Domain.Factories;
 using CookingBook.Domain.ValueObjects;
@@ -13,7 +12,7 @@ public class UserFactoryTests
     public void
         Create_Throws_EmptyUserIdException_When_UserId_Is_Empty()
     {
-        var exception = Record.Exception(() => _factory.Create(Guid.Empty, "UserName", "PasswordHash",Role.User));
+        var exception = Record.Exception(() => _factory.Create(Guid.Empty, "UserName", "PasswordHash",1));
 
         exception.ShouldNotBeNull();
         exception.ShouldBeOfType<EmptyUserIdException>();
@@ -23,7 +22,7 @@ public class UserFactoryTests
     public void
         Create_Throws_EmptyUserNameException_When_UserName_Is_Empty()
     {
-        var exception = Record.Exception(() => _factory.Create(Guid.NewGuid(), "", "PasswordHash",Role.User));
+        var exception = Record.Exception(() => _factory.Create(Guid.NewGuid(), "", "PasswordHash",1));
 
         exception.ShouldNotBeNull();
         exception.ShouldBeOfType<EmptyUserNameException>();
@@ -33,7 +32,7 @@ public class UserFactoryTests
     public void
         Create_Throws_EmptyPasswordHashException_When_PasswordHash_Is_Empty()
     {
-        var exception = Record.Exception(() => _factory.Create(Guid.NewGuid(), "UserName", "",Role.User));
+        var exception = Record.Exception(() => _factory.Create(Guid.NewGuid(), "UserName", "",1));
 
         exception.ShouldNotBeNull();
         exception.ShouldBeOfType<EmptyPasswordHashException>();
@@ -46,7 +45,7 @@ public class UserFactoryTests
     {
         User user = new User(Guid.NewGuid(), "UserName123", "PasswordHash123");
         
-        var exception = Record.Exception(() => user = _factory.Create(Guid.NewGuid(), "UserName", "PasswordHash",Role.User));
+        var exception = Record.Exception(() => user = _factory.Create(Guid.NewGuid(), "UserName", "PasswordHash",1));
 
         exception.ShouldBeNull();
         user.PasswordHash.ShouldBe((PasswordHash)"PasswordHash");
