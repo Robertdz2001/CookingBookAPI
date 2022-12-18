@@ -1,8 +1,6 @@
-﻿using System.Text;
-using CookingBook.Application.Services;
+﻿using CookingBook.Application.Services;
 using CookingBook.Infrastructure.EF;
 using CookingBook.Infrastructure.EF.Models;
-using CookingBook.Infrastructure.EF.Options;
 using CookingBook.Infrastructure.Jwt;
 using CookingBook.Infrastructure.Logging;
 using CookingBook.Infrastructure.Services;
@@ -11,7 +9,6 @@ using CookingBook.Shared.Queries;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CookingBook.Infrastructure;
 

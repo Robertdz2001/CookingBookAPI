@@ -1,12 +1,15 @@
-﻿namespace CookingBook.Api.Tests;
+﻿using CookingBook.Application.DTO;
+
+namespace CookingBook.Api.Tests;
 
 public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>>
 {
     #region GET
     [Theory]
-    [InlineData("?SearchPhrase=Recipe1",1)]
-    [InlineData("?SearchPhrase=Recipe",2)]
-    [InlineData("?SearchPhrase=Recipe3",0)]
+    [InlineData("?SearchPhrase=Recipe1&SortBy=3&SortByDescending=true&PageNumber=1&PageSize=20",1)]
+    [InlineData("?SearchPhrase=Recipe&SortBy=3&SortByDescending=true&PageNumber=1&PageSize=20",2)]
+    [InlineData("?SearchPhrase=Recipe3&SortBy=3&SortByDescending=true&PageNumber=1&PageSize=20",0)]
+    [InlineData("?SortBy=3&SortByDescending=true&PageNumber=1&PageSize=1",1)]
     [InlineData("",2)]
     public async Task
     GetRecipes_Returns_IEnumerable_Of_Recipes_On_Success(string searchString,int recipesCount)
@@ -20,9 +23,9 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
 
        var responseJson = await response.Content.ReadAsStringAsync();
     
-       var responseRecipesList = JsonConvert.DeserializeObject<List<RecipeReadModel>>(responseJson);
+       var responseRecipesList = JsonConvert.DeserializeObject<PagedResult<RecipeDto>>(responseJson);
 
-       responseRecipesList.Count.ShouldBe(recipesCount);
+       responseRecipesList.Items.Count.ShouldBe(recipesCount);
        response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
     }
