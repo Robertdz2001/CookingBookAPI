@@ -16,6 +16,7 @@ public class Recipe : AggregateRoot<RecipeId>
     private LinkedList<Tool> _tools =new();
     private LinkedList<Step> _steps =new();
     private LinkedList<Ingredient> _ingredients=new();
+    private LinkedList<Review> _reviews = new();
     public UserId UserId { get; set; }
     
     
@@ -30,6 +31,73 @@ public class Recipe : AggregateRoot<RecipeId>
         _calories = 0;
     }
 
+    #region Review
+
+    public void AddReview(Review review)
+    {
+        var alreadyExists = _reviews.Any(r => r.Name == review.Name);
+
+        if (alreadyExists)
+        {
+            throw new ReviewAlreadyExistsException($"Review with name: '{review.Name}' already exists.");
+        }
+
+        var alreadyHasReviewFromUser = _reviews.Any(r => r.UserId == review.UserId);
+        
+        if(alreadyHasReviewFromUser)
+        {
+            throw new ReviewAlreadyExistsException($"User with id: '{review.UserId}' already added review for recipe with id: '{review.RecipeId}'.");
+        }
+
+        _reviews.AddLast(review);
+        
+        AddEvent(new ReviewAdded(this,review));
+    }
+
+    public void ChangeReview(Review review, string reviewName)
+    {
+        var reviewToChange = GetReview(reviewName);
+
+        var alreadyExists = _reviews.Any(r => r.Name == review.Name && r.Name != reviewName);
+        
+        if (alreadyExists)
+        {
+            throw new ReviewAlreadyExistsException($"Review with name: '{review.Name}' already exists.");
+        }
+
+        _reviews.Find(reviewToChange).Value = review;
+        
+        AddEvent(new ReviewChanged(this, reviewToChange));
+        
+    }
+
+    public void RemoveReview(string reviewName)
+    {
+        var reviewToRemove = GetReview(reviewName);
+
+        _reviews.Remove(reviewToRemove);
+        
+        AddEvent(new ReviewRemoved(this,reviewToRemove));
+        
+    }
+    
+    private Review GetReview(string reviewName)
+    {
+        var review = _reviews.FirstOrDefault(r => r.Name == reviewName);
+
+        if (review is null)
+        {
+            throw new ReviewNotFoundException(review.Name);
+        }
+
+        return review;
+    }
+
+    
+
+    #endregion
+    
+    #region Ingredient
     public void AddIngredient(Ingredient ingredient)
     {
         var alreadyExists = _ingredients.Any(i => i.Name.Equals(ingredient.Name));
@@ -48,9 +116,9 @@ public class Recipe : AggregateRoot<RecipeId>
 
     public void ChangeIngredient(Ingredient ingredient, string ingredientName)
     {
-        var ingredientToChange = getIngredient(ingredientName);
+        var ingredientToChange = GetIngredient(ingredientName);
         
-        var alreadyExists = _ingredients.Any(i => i.Name.Equals(ingredient.Name));
+        var alreadyExists = _ingredients.Any(i => i.Name.Equals(ingredient.Name) && i.Name!=ingredientName);
         
         if (alreadyExists)
         {
@@ -68,7 +136,7 @@ public class Recipe : AggregateRoot<RecipeId>
 
     public void RemoveIngredient(string ingredientName)
     {
-        var ingredientToRemove = getIngredient(ingredientName);
+        var ingredientToRemove = GetIngredient(ingredientName);
         
         _calories -= ingredientToRemove.getCalories();
 
@@ -76,6 +144,22 @@ public class Recipe : AggregateRoot<RecipeId>
         
         AddEvent(new IngredientRemoved(this, ingredientToRemove));
     }
+    
+    private Ingredient GetIngredient(string ingredientName)
+    {
+        var ingredient = _ingredients.FirstOrDefault(t => t.Name.Equals(ingredientName));
+
+        if (ingredient is null)
+        {
+            throw new IngredientNotFoundException(ingredientName);
+        }
+        return ingredient;
+    }
+    
+
+    #endregion
+
+    #region Tool
     public void AddTool(Tool tool)
     {
         var alreadyExists = _tools.Any(t => t.Name.Equals(tool.Name));
@@ -92,9 +176,9 @@ public class Recipe : AggregateRoot<RecipeId>
 
     public void ChangeTool(Tool tool, string toolName)
     {
-        var toolToChange = getTool(toolName);
+        var toolToChange = GetTool(toolName);
         
-        var alreadyExists = _tools.Any(t => t.Name.Equals(tool.Name));
+        var alreadyExists = _tools.Any(t => t.Name.Equals(tool.Name) && t.Name!=toolName);
 
         if (alreadyExists)
         {
@@ -108,15 +192,27 @@ public class Recipe : AggregateRoot<RecipeId>
 
     public void RemoveTool(string toolName)
     {
-        var toolToRemove = getTool(toolName);
+        var toolToRemove = GetTool(toolName);
 
         _tools.Remove(toolToRemove);
         
         AddEvent(new ToolRemoved(this, toolToRemove));
     }
+    private Tool GetTool(string toolName)
+    {
+        var tool = _tools.FirstOrDefault(t => t.Name.Equals(toolName));
+
+        if (tool is null)
+        {
+            throw new ToolNotFoundException(toolName);
+        }
+        return tool;
+    }
     
-    
-    
+    #endregion
+
+    #region Step
+
     public void AddStep(Step step)
     {
         var alreadyExists = _steps.Any(s => s.Name.Equals(step.Name));
@@ -133,9 +229,9 @@ public class Recipe : AggregateRoot<RecipeId>
 
     public void ChangeStep(Step step, string stepName)
     {
-        var stepToChange = getStep(stepName);
+        var stepToChange = GetStep(stepName);
         
-        var alreadyExists = _steps.Any(s => s.Name.Equals(step.Name));
+        var alreadyExists = _steps.Any(s => s.Name.Equals(step.Name)&& s.Name!=stepName);
 
         if (alreadyExists)
         {
@@ -149,37 +245,14 @@ public class Recipe : AggregateRoot<RecipeId>
 
     public void RemoveStep(string stepName)
     {
-        var stepToRemove = getStep(stepName);
+        var stepToRemove = GetStep(stepName);
 
         _steps.Remove(stepToRemove);
         
         AddEvent(new StepRemoved(this, stepToRemove));
     }
-    
-    
-    
-    private Ingredient getIngredient(string ingredientName)
-    {
-        var ingredient = _ingredients.FirstOrDefault(t => t.Name.Equals(ingredientName));
 
-        if (ingredient is null)
-        {
-            throw new IngredientNotFoundException(ingredientName);
-        }
-        return ingredient;
-    }
-    
-    private Tool getTool(string toolName)
-    {
-        var tool = _tools.FirstOrDefault(t => t.Name.Equals(toolName));
-
-        if (tool is null)
-        {
-            throw new ToolNotFoundException(toolName);
-        }
-        return tool;
-    }
-    private Step getStep(string stepName)
+    private Step GetStep(string stepName)
     {
         var step = _steps.FirstOrDefault(s => s.Name.Equals(stepName));
 
@@ -189,5 +262,12 @@ public class Recipe : AggregateRoot<RecipeId>
         }
         return step;
     }
+
+    #endregion
+
+   
+
+   
+    
 
 }
