@@ -9,7 +9,7 @@ public class ReviewTests
     [Fact]
     public void ReviewConstructor_Throws_EmptyReviewNameException_When_Name_Is_Empty()
     {
-        var exception = Record.Exception(() => new Review("", "Content", 5));
+        var exception = Record.Exception(() => new Review("", "Content", 5, Guid.NewGuid()));
 
         exception.ShouldNotBeNull();
         exception.ShouldBeOfType<EmptyReviewNameException>();
@@ -18,7 +18,7 @@ public class ReviewTests
     [Fact]
     public void ReviewConstructor_Throws_EmptyReviewContentException_When_Name_Is_Empty()
     {
-        var exception = Record.Exception(() => new Review("Review", "", 5));
+        var exception = Record.Exception(() => new Review("Review", "", 5, Guid.NewGuid()));
 
         exception.ShouldNotBeNull();
         exception.ShouldBeOfType<EmptyReviewContentException>();
@@ -31,7 +31,7 @@ public class ReviewTests
     [InlineData(100)]
     public void ReviewConstructor_Throws_InvalidReviewRateException_When_Rate_Is_Not_Between_Minus_5_And_5(short rate)
     {
-        var exception = Record.Exception(() => new Review("Review", "Content", rate));
+        var exception = Record.Exception(() => new Review("Review", "Content", rate, Guid.NewGuid()));
 
         exception.ShouldNotBeNull();
         exception.ShouldBeOfType<InvalidReviewRateException>();

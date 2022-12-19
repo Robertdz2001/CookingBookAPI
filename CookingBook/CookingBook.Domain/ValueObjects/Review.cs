@@ -13,7 +13,7 @@ public class Review
     public Guid RecipeId { get; set; }
     public Guid UserId { get; set; }
 
-    public Review(string name, string content, short rate)
+    public Review(string name, string content, short rate ,Guid userId)
     {
         if (String.IsNullOrWhiteSpace(name))
         {
@@ -33,6 +33,7 @@ public class Review
         CreatedDate = DateTime.UtcNow;
         Content = content;
         Rate = rate;
+        UserId = userId;
 
     }
     

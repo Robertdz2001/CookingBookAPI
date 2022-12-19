@@ -48,7 +48,7 @@ public class Recipe : AggregateRoot<RecipeId>
         
         if(alreadyHasReviewFromUser)
         {
-            throw new ReviewAlreadyExistsException($"User with id: '{review.UserId}' already added review for recipe with id: '{review.RecipeId}'.");
+            throw new ReviewAlreadyExistsException($"User with id: '{review.UserId}' already added review for recipe with id: '{this.Id}'.");
         }
 
         _reviews.AddLast(review);
@@ -97,7 +97,7 @@ public class Recipe : AggregateRoot<RecipeId>
 
         if (review is null)
         {
-            throw new ReviewNotFoundException(review.Name);
+            throw new ReviewNotFoundException(reviewName);
         }
 
         return review;
