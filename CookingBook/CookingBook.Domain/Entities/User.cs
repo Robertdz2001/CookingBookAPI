@@ -8,6 +8,8 @@ public class User
 
     private UserName _userName;
 
+    private UserRating _userRating;
+
     public PasswordHash PasswordHash { get; set; }
 
     private LinkedList<Recipe> _recipes = new();
@@ -21,9 +23,15 @@ public class User
         _userName = userName;
         RoleId = roleId;
         PasswordHash = passwordHash;
+        _userRating = 0;
     }
     
     public User(){}
+
+    public void AddRate(short rate)
+    {
+        _userRating += rate;
+    }
 
     public void SetUserRole(int roleId)
     {
