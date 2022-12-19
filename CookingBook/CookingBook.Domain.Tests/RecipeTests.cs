@@ -16,7 +16,7 @@ public class RecipeTests
     {
         var recipe = GetRecipe();
 
-        var review = new Review("Review 1", "Content", 5);
+        var review = new Review("Review 1", "Content", 5, Guid.NewGuid());
 
         var exception = Record.Exception(() => recipe.AddReview(review));
         
@@ -33,9 +33,9 @@ public class RecipeTests
     {
         var recipe = GetRecipe();
         
-        recipe.AddReview(new Review("Review 1", "Content" , 5));
+        recipe.AddReview(new Review("Review 1", "Content" , 5, Guid.NewGuid()));
         
-        var review = new Review("Review 1", "Content", 5);
+        var review = new Review("Review 1", "Content", 5, Guid.NewGuid());
 
         var exception = Record.Exception(() => recipe.AddReview(review));
         
@@ -43,7 +43,120 @@ public class RecipeTests
 
         exception.ShouldBeOfType<ReviewAlreadyExistsException>();
     }
+    [Fact]
+    public void AddReview_Throws_ReviewAlreadyExistsException_When_User_Already_Added_Review()
+    {
+        var recipe = GetRecipe();
+
+        var uid = Guid.NewGuid();
+        
+        recipe.AddReview(new Review("Review 3", "Content" , 5, uid));
+        
+        var review = new Review("Review 1", "Content", 5, uid);
+
+        var exception = Record.Exception(() => recipe.AddReview(review));
+        
+        exception.ShouldNotBeNull();
+
+        exception.ShouldBeOfType<ReviewAlreadyExistsException>();
+    }
+    
+    [Fact]
+    public void ChangeReview_Adds_ReviewChanged_Domain_Event_On_Success()
+    {
+        var recipe = GetRecipe();
+        
+        recipe.AddReview(new Review("ReviewToChange", "Content" , 5, Guid.NewGuid()));
+        
+        var review = new Review("Review 1", "Content", 5, Guid.NewGuid());
+        
+        recipe.ClearEvents();
+
+        var exception = Record.Exception(() => recipe.ChangeReview(review,"ReviewToChange"));
+        
+        exception.ShouldBeNull();
+
+        var @event = recipe.Events.FirstOrDefault() as ReviewChanged;
+        
+        @event.ShouldNotBeNull();
+        @event.Review.Name.ShouldBe("ReviewToChange");
+        
+    }
+    
+    [Fact]
+    public void ChangeReview_Throws_ReviewNotFoundException_When_There_Is_No_Review_With_Given_Name()
+    {
+        var recipe = GetRecipe();
+
+        var review = new Review("Review 1", "Content", 5, Guid.NewGuid());
+
+        var exception = Record.Exception(() => recipe.ChangeReview(review,"ReviewToChange"));
+        
+        exception.ShouldNotBeNull();
+
+        exception.ShouldBeOfType<ReviewNotFoundException>();
+
+    }
+    
+    [Fact]
+    public void ChangeReview_Throws_ReviewAlreadyExistsException_When_There_Is_Already_Review_With_The_Same_Name()
+    {
+        var recipe = GetRecipe();
+        
+        recipe.AddReview(new Review("Review 1","Content",5, Guid.NewGuid()));
+        recipe.AddReview(new Review("Review 2","Content",5, Guid.NewGuid()));
+
+        var review = new Review("Review 2", "Content123", 5, Guid.NewGuid());
+
+        var exception = Record.Exception(() => recipe.ChangeReview(review,"Review 1"));
+        
+        exception.ShouldNotBeNull();
+
+        exception.ShouldBeOfType<ReviewAlreadyExistsException>();
+
+    }
+    
+    [Fact]
+    public void RemoveReview_Adds_ReviewRemoved_Domain_Event_On_Success()
+    {
+        var recipe = GetRecipe();
+        
+        recipe.AddReview(new Review("ReviewToRemove", "Content" , 5, Guid.NewGuid()));
+
+        recipe.ClearEvents();
+
+        var exception = Record.Exception(() => recipe.RemoveReview("ReviewToRemove"));
+        
+        exception.ShouldBeNull();
+
+        var @event = recipe.Events.FirstOrDefault() as ReviewRemoved;
+        
+        @event.ShouldNotBeNull();
+        @event.Review.Name.ShouldBe("ReviewToRemove");
+        
+    }
+    
+    [Fact]
+    public void RemoveReview_Throws_ReviewNotFoundException_When_There_Is_No_Review_With_Given_Name()
+    {
+        var recipe = GetRecipe();
+
+        var exception = Record.Exception(() => recipe.RemoveReview("ReviewToRemove"));
+        
+        exception.ShouldNotBeNull();
+
+        exception.ShouldBeOfType<ReviewNotFoundException>();
+        
+    }
+    
+    
+    
     #endregion
+
+    
+    
+    
+    
     
     #region Ingredients
     [Fact]
