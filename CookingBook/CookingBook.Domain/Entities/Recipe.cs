@@ -30,6 +30,7 @@ public class Recipe : AggregateRoot<RecipeId>
         _createdDate = createdDate;
         Id = id;
         _calories = 0;
+        _recipeRating = 0;
     }
 
     #region Review

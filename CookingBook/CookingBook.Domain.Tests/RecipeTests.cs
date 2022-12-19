@@ -9,6 +9,42 @@ namespace CookingBook.Domain.Tests;
 
 public class RecipeTests
 {
+    #region Reviews
+
+    [Fact]
+    public void AddReview_Adds_ReviewAdded_Domain_Event_On_Success()
+    {
+        var recipe = GetRecipe();
+
+        var review = new Review("Review 1", "Content", 5);
+
+        var exception = Record.Exception(() => recipe.AddReview(review));
+        
+        exception.ShouldBeNull();
+
+        var @event = recipe.Events.FirstOrDefault() as ReviewAdded;
+        
+        @event.ShouldNotBeNull();
+        @event.Review.Name.ShouldBe("Review 1");
+
+    }
+    [Fact]
+    public void AddReview_Throws_ReviewAlreadyExistsException_When_There_Is_Already_Review_With_The_Same_Name()
+    {
+        var recipe = GetRecipe();
+        
+        recipe.AddReview(new Review("Review 1", "Content" , 5));
+        
+        var review = new Review("Review 1", "Content", 5);
+
+        var exception = Record.Exception(() => recipe.AddReview(review));
+        
+        exception.ShouldNotBeNull();
+
+        exception.ShouldBeOfType<ReviewAlreadyExistsException>();
+    }
+    #endregion
+    
     #region Ingredients
     [Fact]
     public void
