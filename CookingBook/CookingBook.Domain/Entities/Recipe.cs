@@ -13,6 +13,7 @@ public class Recipe : AggregateRoot<RecipeId>
     private RecipePrepTime _prepTime; //in mins
     private RecipeCalories _calories;
     private RecipeCreatedDate _createdDate;
+    private RecipeRating _recipeRating;
     private LinkedList<Tool> _tools =new();
     private LinkedList<Step> _steps =new();
     private LinkedList<Ingredient> _ingredients=new();
@@ -50,6 +51,8 @@ public class Recipe : AggregateRoot<RecipeId>
         }
 
         _reviews.AddLast(review);
+
+        _recipeRating += review.Rate;
         
         AddEvent(new ReviewAdded(this,review));
     }
@@ -65,7 +68,11 @@ public class Recipe : AggregateRoot<RecipeId>
             throw new ReviewAlreadyExistsException($"Review with name: '{review.Name}' already exists.");
         }
 
+        _recipeRating -= reviewToChange.Rate;
+
         _reviews.Find(reviewToChange).Value = review;
+
+        _recipeRating += review.Rate;
         
         AddEvent(new ReviewChanged(this, reviewToChange));
         
@@ -76,6 +83,8 @@ public class Recipe : AggregateRoot<RecipeId>
         var reviewToRemove = GetReview(reviewName);
 
         _reviews.Remove(reviewToRemove);
+
+        _recipeRating -= reviewToRemove.Rate;
         
         AddEvent(new ReviewRemoved(this,reviewToRemove));
         
