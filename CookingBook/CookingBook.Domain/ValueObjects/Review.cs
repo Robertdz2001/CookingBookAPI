@@ -24,7 +24,7 @@ public class Review
             throw new EmptyReviewContentException();
         }
 
-        if (rate <= -5 || rate >= 5)
+        if (rate < -5 || rate > 5)
         {
             throw new InvalidReviewRateException();
         }
