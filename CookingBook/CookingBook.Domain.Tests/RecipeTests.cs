@@ -148,15 +148,7 @@ public class RecipeTests
         exception.ShouldBeOfType<ReviewNotFoundException>();
         
     }
-    
-    
-    
     #endregion
-
-    
-    
-    
-    
     
     #region Ingredients
     [Fact]
