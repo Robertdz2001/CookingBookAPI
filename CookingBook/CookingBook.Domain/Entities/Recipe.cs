@@ -91,7 +91,7 @@ public class Recipe : AggregateRoot<RecipeId>
         
     }
     
-    private Review GetReview(string reviewName)
+    public Review GetReview(string reviewName)
     {
         var review = _reviews.FirstOrDefault(r => r.Name == reviewName);
 
