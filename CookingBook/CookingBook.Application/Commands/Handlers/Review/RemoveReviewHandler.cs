@@ -30,7 +30,7 @@ public class RemoveReviewHandler : ICommandHandler<RemoveReview>
 
         var review = recipe.GetReview(command.Name);
 
-        if (review.UserId != _userContext.GetUserId)
+        if ((Guid)review.UserId != _userContext.GetUserId)
         {
             throw new ForbidException();
         }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CookingBook.Infrastructure.EF.Configuration;
 
 public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfiguration<Recipe>, IEntityTypeConfiguration<Ingredient>
-    , IEntityTypeConfiguration<Step>, IEntityTypeConfiguration<Tool>
+    , IEntityTypeConfiguration<Step>, IEntityTypeConfiguration<Tool>, IEntityTypeConfiguration<Review>
 {
     
     public void Configure(EntityTypeBuilder<User> builder)
@@ -20,6 +20,9 @@ public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfi
         
         var userPasswordHashConverter = new ValueConverter<PasswordHash, string>(p => p.Value,
             p => new PasswordHash(p));
+        
+        var userRatingConverter = new ValueConverter<UserRating, short>(ur => ur.Value,
+            ur => new UserRating(ur));
         
         builder
             .Property(u => u.Id)
@@ -34,6 +37,11 @@ public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfi
              .Property(u=>u.PasswordHash)
              .HasConversion(userPasswordHashConverter)
              .HasColumnName("PasswordHash");
+         
+         builder
+             .Property(typeof(UserRating), "_userRating")
+             .HasConversion(userRatingConverter)
+             .HasColumnName("UserRating");
 
          builder.HasOne(u => u.Role)
                 .WithMany()
@@ -62,6 +70,9 @@ public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfi
         
         var recipeCreatedDateConverter = new ValueConverter<RecipeCreatedDate, DateTime>(rcd => rcd.Value,
             rcd => new RecipeCreatedDate(rcd));
+        
+        var recipeRatingConverter = new ValueConverter<RecipeRating, short>(rr => rr.Value,
+            rr => new RecipeRating(rr));
         
         builder
             .Property(r => r.Id)
@@ -94,6 +105,11 @@ public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfi
             .Property(typeof(RecipeCreatedDate), "_createdDate")
             .HasConversion(recipeCreatedDateConverter)
             .HasColumnName("CreatedDate");
+        
+        builder
+            .Property(typeof(RecipeRating), "_recipeRating")
+            .HasConversion(recipeRatingConverter)
+            .HasColumnName("RecipeRating");
         
         builder.HasMany(typeof(Ingredient), "_ingredients");
         
@@ -136,5 +152,19 @@ public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfi
         builder.ToTable("Tools");
     }
 
-    
+
+    public void Configure(EntityTypeBuilder<Review> builder)
+    {
+        builder.Property<Guid>("Id");
+        builder.Property(r => r.Name);
+        builder.Property(r => r.CreatedDate);
+        builder.Property(r => r.Content);
+        builder.Property(r => r.Rate);
+        builder.Property(r=>r.RecipeId)
+            .HasConversion(id => id.Value, id => new RecipeId(id));
+        builder.Property(r=>r.UserId)
+            .HasConversion(id => id.Value, id => new UserId(id));
+
+        builder.ToTable("Reviews");
+    }
 }

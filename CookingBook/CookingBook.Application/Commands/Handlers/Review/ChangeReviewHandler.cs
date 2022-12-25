@@ -31,7 +31,7 @@ public class ChangeReviewHandler : ICommandHandler<ChangeReview>
 
         var reviewToChange = recipe.GetReview(command.ReviewToChange);
 
-        if (reviewToChange.UserId != _userContext.GetUserId)
+        if ((Guid)reviewToChange.UserId != _userContext.GetUserId)
         {
             throw new ForbidException();
         }
