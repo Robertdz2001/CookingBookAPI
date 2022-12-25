@@ -8,10 +8,8 @@ public class Review
     public DateTime CreatedDate { get; set; }
     public string Content { get; set; }
     public short Rate { get; set; }
-    
-    
-    public Guid RecipeId { get; set; }
-    public Guid UserId { get; set; }
+    public RecipeId RecipeId { get; set; }
+    public UserId UserId { get; set; }
 
     public Review(string name, string content, short rate ,Guid userId)
     {
@@ -36,5 +34,6 @@ public class Review
         UserId = userId;
 
     }
+    public Review(){}
     
 }

@@ -32,6 +32,8 @@ public class ReadDbContext : DbContext
         modelBuilder.ApplyConfiguration<StepReadModel>(configuration);
         
         modelBuilder.ApplyConfiguration<ToolReadModel>(configuration);
+        
+        modelBuilder.ApplyConfiguration<ReviewReadModel>(configuration);
 
     }
     

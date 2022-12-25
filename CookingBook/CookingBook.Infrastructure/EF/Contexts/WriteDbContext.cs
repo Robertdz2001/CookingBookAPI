@@ -28,5 +28,7 @@ public class WriteDbContext : DbContext
         modelBuilder.ApplyConfiguration<Tool>(configuration);
         
         modelBuilder.ApplyConfiguration<Step>(configuration);
+        
+        modelBuilder.ApplyConfiguration<Review>(configuration);
     }
 }

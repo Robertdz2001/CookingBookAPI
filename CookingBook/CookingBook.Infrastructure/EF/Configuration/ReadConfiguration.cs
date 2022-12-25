@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace CookingBook.Infrastructure.EF.Configuration;
 
 internal sealed class ReadConfiguration: IEntityTypeConfiguration<Role>,IEntityTypeConfiguration<UserReadModel> ,IEntityTypeConfiguration<RecipeReadModel>, IEntityTypeConfiguration<IngredientReadModel>
-    , IEntityTypeConfiguration<StepReadModel>, IEntityTypeConfiguration<ToolReadModel>
+    , IEntityTypeConfiguration<StepReadModel>, IEntityTypeConfiguration<ToolReadModel>,IEntityTypeConfiguration<ReviewReadModel>
 {
     public void Configure(EntityTypeBuilder<Role> builder)
     {
@@ -65,6 +65,11 @@ internal sealed class ReadConfiguration: IEntityTypeConfiguration<Role>,IEntityT
     {
         builder.ToTable("Tools");
         builder.HasData(GetTools());
+    }
+    
+    public void Configure(EntityTypeBuilder<ReviewReadModel> builder)
+    {
+        builder.ToTable("Reviews");
     }
     
     

@@ -8,6 +8,8 @@ public class RecipeDto
     public ushort PrepTime{ get; set; }
     public double Calories{ get; set; }
     public DateTime CreatedDate{ get; set; }
+    
+    public short RecipeRating { get; set; }
     public IEnumerable<ToolDto> Tools{ get; set; }
     public IEnumerable<StepDto> Steps { get; set; }
     public IEnumerable<IngredientDto> Ingredients{ get; set; }
