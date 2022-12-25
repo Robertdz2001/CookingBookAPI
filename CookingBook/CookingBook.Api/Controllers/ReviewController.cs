@@ -25,4 +25,24 @@ public class ReviewController : BaseController
         return Created($"api/recipes/{RecipeId}/reviews/{model.Name}", null);
     }
     
+    [HttpPut("{name}")]
+    public async Task<IActionResult> Put([FromRoute] Guid RecipeId,[FromRoute] string name, [FromBody] AddReviewModel model)
+    {
+        var command = new ChangeReview(RecipeId, model.Name, model.Content, model.Rate,name);
+
+        await _commandDispatcher.DispatchAsync(command);
+
+        return Ok();
+    }
+    
+    [HttpDelete("{name}")]
+    public async Task<IActionResult> Put([FromRoute] Guid RecipeId,[FromRoute] string name)
+    {
+        var command = new RemoveReview(RecipeId, name);
+
+        await _commandDispatcher.DispatchAsync(command);
+
+        return NoContent();
+    }
+    
 }
