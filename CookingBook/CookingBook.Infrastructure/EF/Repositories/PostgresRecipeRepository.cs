@@ -22,6 +22,7 @@ public class PostgresRecipeRepository : IRecipeRepository
         .Include("_ingredients")
         .Include("_steps")
         .Include("_tools")
+        .Include("_reviews")
         .FirstOrDefaultAsync(r => r.Id == id);
         
     

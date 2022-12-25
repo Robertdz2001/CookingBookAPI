@@ -117,6 +117,8 @@ public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfi
         
         builder.HasMany(typeof(Step), "_steps");
         
+        builder.HasMany(typeof(Review), "_reviews");
+        
     }
 
     public void Configure(EntityTypeBuilder<Ingredient> builder)
