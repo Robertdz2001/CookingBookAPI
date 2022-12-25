@@ -9,6 +9,8 @@ public class RecipeReadModel
     public ushort PrepTime{ get; set; }
     public double Calories{ get; set; }
     public DateTime CreatedDate{ get; set; }
+
+    public short RecipeRating { get; set; } = 0;
     public IEnumerable<ToolReadModel> Tools{ get; set; }
     public IEnumerable<StepReadModel> Steps { get; set; }
     public IEnumerable<IngredientReadModel> Ingredients{ get; set; }

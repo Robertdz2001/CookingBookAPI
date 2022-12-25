@@ -7,6 +7,8 @@ public class UserReadModel
     public Guid Id { get; set; }
     public string UserName { get; set; }
     public string PasswordHash { get; set; }
+
+    public short UserRating { get; set; } = 0;
     
     public Role Role { get; set; }
 
