@@ -13,4 +13,5 @@ public class RecipeDto
     public IEnumerable<ToolDto> Tools{ get; set; }
     public IEnumerable<StepDto> Steps { get; set; }
     public IEnumerable<IngredientDto> Ingredients{ get; set; }
+    public IEnumerable<ReviewDto> Reviews{ get; set; }
 }

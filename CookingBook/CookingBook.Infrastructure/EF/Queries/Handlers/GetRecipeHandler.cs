@@ -21,6 +21,8 @@ public class GetRecipeHandler : IQueryHandler<GetRecipe,RecipeDto>
             .Include(r => r.Ingredients)
             .Include(r => r.Steps)
             .Include(r => r.Tools)
+            .Include(r=>r.Reviews)
+            .ThenInclude(r=>r.User)
             .Where(r=>r.Id==query.Id)
             .Select(r => r.AsDto())
             .FirstOrDefaultAsync();

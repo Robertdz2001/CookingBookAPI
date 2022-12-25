@@ -14,6 +14,7 @@ public static class Extensions
             PrepTime = readModel.PrepTime,
             Calories = readModel.Calories,
             CreatedDate = readModel.CreatedDate,
+            RecipeRating = readModel.RecipeRating,
 
             Tools = readModel.Tools.Select(t => new ToolDto
             {
@@ -31,6 +32,20 @@ public static class Extensions
                 Name = i.Name,
                 Grams = i.Grams,
                 CaloriesPerHundredGrams = i.CaloriesPerHundredGrams
+            }),
+            
+            Reviews = readModel.Reviews.Select(r=>new ReviewDto
+            {
+                Name = r.Name,
+                Content = r.Content,
+                CreatedDate = r.CreatedDate,
+                Rate = r.Rate,
+                User = new UserDto
+                {
+                    Id = r.User.Id,
+                    UserName = r.User.UserName,
+                    UserRating = r.User.UserRating
+                }
             })
 
         };
