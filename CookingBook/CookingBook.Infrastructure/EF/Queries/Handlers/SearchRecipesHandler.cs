@@ -22,6 +22,8 @@ public class SearchRecipesHandler : IQueryHandler<SearchRecipes,PagedResult<Reci
             .Include(r => r.Ingredients)
             .Include(r => r.Steps)
             .Include(r => r.Tools)
+            .Include(r=>r.Reviews)
+            .ThenInclude(r=>r.User)
             .AsQueryable();
 
         var totalCount = dbQuery.Count();

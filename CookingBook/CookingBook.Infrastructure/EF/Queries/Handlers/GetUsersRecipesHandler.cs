@@ -24,6 +24,8 @@ public class GetUsersRecipesHandler : IQueryHandler<GetUsersRecipes, IEnumerable
             .Include(r => r.Ingredients)
             .Include(r => r.Steps)
             .Include(r => r.Tools)
+            .Include(r=>r.Reviews)
+            .ThenInclude(r=>r.User)
             .Where(r=>r.UserId==_userContext.GetUserId)
             .Select(r => r.AsDto())
             .ToListAsync();
