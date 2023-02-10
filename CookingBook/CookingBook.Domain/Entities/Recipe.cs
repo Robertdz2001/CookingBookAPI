@@ -37,12 +37,21 @@ public class Recipe : AggregateRoot<RecipeId>
 
     public void AddReview(Review review)
     {
+        var userIsRecipeAuthor = review.UserId == UserId;
+
+        if (userIsRecipeAuthor)
+        {
+            throw new UserIsRecipeAuthorException();
+        }
+        
         var alreadyExists = _reviews.Any(r => r.Name == review.Name);
 
         if (alreadyExists)
         {
             throw new ReviewAlreadyExistsException($"Review with name: '{review.Name}' already exists.");
         }
+
+        
 
         var alreadyHasReviewFromUser = _reviews.Any(r => r.UserId == review.UserId);
         
