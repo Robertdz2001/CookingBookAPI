@@ -27,7 +27,7 @@ public class UserController : ControllerBase
 
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto dto)
     {
-        var command = new RegisterUser(Guid.NewGuid(), dto.UserName, dto.Password, dto.ConfirmPassword);
+        var command = new RegisterUser(Guid.NewGuid(), dto.UserName, dto.Password,dto.ImageUrl, dto.ConfirmPassword);
         
         await _commandDispatcher.DispatchAsync(command);
         

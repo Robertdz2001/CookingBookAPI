@@ -5,5 +5,5 @@ namespace CookingBook.Domain.Factories;
 
 public interface IUserFactory
 {
-   public User Create(UserId id, UserName name,PasswordHash passwordHash ,int roleId);
+   public User Create(UserId id, UserName name,PasswordHash passwordHash,ImageUrl imageUrl ,int roleId);
 }

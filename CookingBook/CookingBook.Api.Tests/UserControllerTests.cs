@@ -24,7 +24,7 @@ public class UserControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         ChangeRole_Returns_NoContent_On_Success()
     {
-        var user = new User(Guid.NewGuid(), "Name", "Password");
+        var user = new User(Guid.NewGuid(), "Name","Url", "Password");
         await _writeDbContext.Users.AddAsync(user);
         await _writeDbContext.SaveChangesAsync();
         var roleId = 2;
@@ -47,7 +47,7 @@ public class UserControllerTests: IClassFixture<WebApplicationFactory<Program>>
     public async Task
         RegisterUser_Returns_Ok_For_Valid_Model()
     {
-        var httpContent = GetHttpContentForRegisterModel("UserName123", "Password", "Password");
+        var httpContent = GetHttpContentForRegisterModel("UserName123", "Password", "Password","Url");
 
         var response = await _client.PostAsync("api/user/register", httpContent);
         
@@ -57,12 +57,12 @@ public class UserControllerTests: IClassFixture<WebApplicationFactory<Program>>
     }
     
     [Theory]
-    [InlineData("","Password","Password")]
-    [InlineData("UserName","Password","Password1")]
+    [InlineData("","Password","Password","Url")]
+    [InlineData("UserName","Password","Password1","Url")]
     public async Task
-        RegisterUser_Returns_BadRequest_When_Model_Is_Invalid(string userName, string password, string confirmPassword)
+        RegisterUser_Returns_BadRequest_When_Model_Is_Invalid(string userName, string password, string confirmPassword, string imageUrl)
     {
-        var httpContent = GetHttpContentForRegisterModel(userName, password, confirmPassword);
+        var httpContent = GetHttpContentForRegisterModel(userName, password, confirmPassword,imageUrl);
 
         var response = await _client.PostAsync("api/user/register", httpContent);
         
@@ -125,6 +125,7 @@ public class UserControllerTests: IClassFixture<WebApplicationFactory<Program>>
         {
             UserName = userNameToSeed,
             PasswordHash = passwordToSeed,
+            ImageUrl = "Url",
             RoleId = 1
         
         };
@@ -138,9 +139,9 @@ public class UserControllerTests: IClassFixture<WebApplicationFactory<Program>>
 
         return new StringContent(json, UnicodeEncoding.UTF8, "application/json");
     }
-    private StringContent? GetHttpContentForRegisterModel(string userName,string password, string confirmPassword)
+    private StringContent? GetHttpContentForRegisterModel(string userName,string password, string confirmPassword,string imageUrl)
     {
-        var registerModel = new RegisterUserDto(userName, password, confirmPassword);
+        var registerModel = new RegisterUserDto(userName, password,imageUrl, confirmPassword);
 
         var json = JsonConvert.SerializeObject(registerModel);
 

@@ -40,6 +40,7 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
         {
             Name = "Recipe123",
             ImageUrl = "Url1",
+            User = new UserReadModel{Id = Guid.NewGuid(),ImageUrl = "UserUrl", PasswordHash = "123", UserName = "userName"},
             Calories = 0,
             CreatedDate = DateTime.UtcNow,
             Id = id
@@ -259,6 +260,7 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
                     Name = "Recipe1",
                     ImageUrl = "Url1",
                     Calories = 0,
+                    User = new UserReadModel{Id = Guid.NewGuid(),ImageUrl = "UserUrl", PasswordHash = "123", UserName = "userName"},
                     CreatedDate = DateTime.UtcNow,
                     Id = Guid.NewGuid()
                 },
@@ -267,6 +269,7 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
                     Name = "Recipe2",
                     ImageUrl = "Url2",
                     Calories = 0,
+                    User = new UserReadModel{Id = Guid.NewGuid(),ImageUrl = "UserUrl", PasswordHash = "123", UserName = "userName"},
                     CreatedDate = DateTime.UtcNow,
                     Id = Guid.NewGuid()
                 }

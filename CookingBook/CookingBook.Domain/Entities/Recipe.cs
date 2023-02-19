@@ -9,7 +9,7 @@ public class Recipe : AggregateRoot<RecipeId>
 {
     //public RecipeId Id from AggregateRoot
     private RecipeName _name;
-    private RecipeImageUrl _imageUrl;
+    private ImageUrl _imageUrl;
     private RecipePrepTime _prepTime; //in mins
     private RecipeCalories _calories;
     private RecipeCreatedDate _createdDate;
@@ -21,7 +21,7 @@ public class Recipe : AggregateRoot<RecipeId>
     public UserId UserId { get; set; }
     
     
-    public Recipe(UserId userId ,RecipeId id,RecipeName name, RecipeImageUrl imageUrl, RecipePrepTime prepTime, RecipeCreatedDate createdDate)
+    public Recipe(UserId userId ,RecipeId id,RecipeName name, ImageUrl imageUrl, RecipePrepTime prepTime, RecipeCreatedDate createdDate)
     {
         UserId = userId;
         _name = name;

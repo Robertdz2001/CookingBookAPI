@@ -25,7 +25,7 @@ public class ChangeReviewHandlerTests
         
         recipe.AddReview(reviewToChange);
 
-        var user = new Domain.Entities.User(uid, "User", "Pass");
+        var user = new Domain.Entities.User(uid, "User", "Url","Pass");
         
         _recipeRepository.GetAsync(recipe.Id).Returns(recipe);
 
@@ -78,7 +78,7 @@ public class ChangeReviewHandlerTests
         
         recipe.AddReview(reviewToChange);
     
-        var user = new Domain.Entities.User(uid, "User", "Pass");
+        var user = new Domain.Entities.User(uid, "User", "Url","Pass");
         
         _recipeRepository.GetAsync(recipe.Id).Returns(recipe);
     

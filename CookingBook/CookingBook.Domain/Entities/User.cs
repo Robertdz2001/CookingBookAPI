@@ -10,6 +10,7 @@ public class User
 
     private UserRating _userRating;
 
+    private ImageUrl _imageUrl;
     public PasswordHash PasswordHash { get; set; }
 
     private LinkedList<Recipe> _recipes = new();
@@ -17,12 +18,13 @@ public class User
     public Role Role;
     
     public int RoleId;
-    public User(UserId id, UserName userName,  PasswordHash passwordHash,int roleId=1)
+    public User(UserId id, UserName userName,  PasswordHash passwordHash,ImageUrl imageUrl ,int roleId=1)
     {
         Id = id;
         _userName = userName;
         RoleId = roleId;
         PasswordHash = passwordHash;
+        _imageUrl = imageUrl;
         _userRating = 0;
     }
     

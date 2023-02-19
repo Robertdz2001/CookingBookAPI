@@ -19,6 +19,7 @@ public class SearchRecipesHandler : IQueryHandler<SearchRecipes,PagedResult<Reci
     public async Task<PagedResult<RecipeDto>> HandleAsync(SearchRecipes query)
     {
         var dbQuery = _recipes
+            .Include(r=>r.User)
             .Include(r => r.Ingredients)
             .Include(r => r.Steps)
             .Include(r => r.Tools)
