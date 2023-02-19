@@ -1,6 +1,8 @@
 ﻿using CookingBook.Api.Models;
 using CookingBook.Application.Commands.User;
+using CookingBook.Application.DTO;
 using CookingBook.Application.Queries;
+using CookingBook.Domain.Entities;
 using CookingBook.Infrastructure.Jwt.DTO;
 using CookingBook.Shared.Abstractions.Commands;
 using CookingBook.Shared.Abstractions.Queries;
@@ -38,6 +40,15 @@ public class UserController : ControllerBase
 
 
         return Ok(token);
+    }
+
+    [HttpGet]
+
+    public async Task<ActionResult<UserDto>> GetUser()
+    {
+        var user = await _queryDispatcher.DispatchAsync(new GetUser());
+
+        return Ok(user);
     }
     
 

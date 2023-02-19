@@ -49,4 +49,12 @@ public static class Extensions
             })
 
         };
+
+    public static UserDto AsDto(this UserReadModel readModel)
+        => new()
+        {
+            Id = readModel.Id,
+            UserName = readModel.UserName,
+            UserRating = readModel.UserRating
+        };
 }
