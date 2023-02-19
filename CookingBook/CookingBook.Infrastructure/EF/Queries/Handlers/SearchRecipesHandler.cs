@@ -33,21 +33,25 @@ public class SearchRecipesHandler : IQueryHandler<SearchRecipes,PagedResult<Reci
         {
             dbQuery = dbQuery.Where(r => r.Name.Contains(query.SearchPhrase));
         }
-
-        if (query.SortBy is not null)
+        
+        if (query.SearchByUserName is not null)
         {
-            var columnsSelector = new Dictionary<SortByOptions?, Expression<Func<RecipeReadModel, object>>>
+            dbQuery = dbQuery.Where(r => r.User.UserName.Contains(query.SearchByUserName));
+        }
+        
+        var columnsSelector = new Dictionary<SortByOptions?, Expression<Func<RecipeReadModel, object>>>
             {
                 { SortByOptions.Name , recipe=>recipe.Name},
                 { SortByOptions.Calories , recipe=>recipe.Calories},
                 { SortByOptions.PrepTime , recipe=>recipe.PrepTime},
-                { SortByOptions.CreatedDate , recipe=>recipe.CreatedDate}
+                { SortByOptions.CreatedDate , recipe=>recipe.CreatedDate},
+                { SortByOptions.Rating , recipe=>recipe.RecipeRating}
             };
 
             var sortByExpression = columnsSelector[query.SortBy];
 
             dbQuery = query.SortByDescending ? dbQuery.OrderByDescending(sortByExpression) : dbQuery.OrderBy(sortByExpression);
-        }
+        
 
         var result = await dbQuery
                                             .Skip(query.PageSize * (query.PageNumber - 1))
