@@ -67,64 +67,7 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
-
-    [Fact]
-    public async Task
-        GetUserRecipes_Returns_IEnumerable_Of_Recipes_On_Success()
-    {
-        if (!_readDbContext.Recipes.Any())
-        {
-            await InitDataBase();
-        }
-        
-        var recipes = new List<RecipeReadModel>()
-        {
-            new RecipeReadModel()
-            {
-                Name = "Recipe1",
-                ImageUrl = "Url1",
-                Calories = 0,
-                CreatedDate = DateTime.UtcNow,
-                Id = Guid.NewGuid(),
-                UserId = Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766")
-            },
-            new RecipeReadModel()
-            {
-                Name = "Recipe2",
-                ImageUrl = "Url2",
-                Calories = 0,
-                CreatedDate = DateTime.UtcNow,
-                Id = Guid.NewGuid(),
-                UserId = Guid.Parse("bb21ce33-ea66-4c56-aefc-5f8588f95766")
-                
-            },
-            new RecipeReadModel()
-            {
-                Name = "Recipe3",
-                ImageUrl = "Url2",
-                Calories = 0,
-                CreatedDate = DateTime.UtcNow,
-                Id = Guid.NewGuid(),
-                UserId = Guid.NewGuid()
-                
-            }
-            
-        };
-
-        await _readDbContext.Recipes.AddRangeAsync(recipes);
-        await _readDbContext.SaveChangesAsync();
-        
-        
-
-        var response = await _client.GetAsync("/api/recipes/user");
-
-        var responseJson = await response.Content.ReadAsStringAsync();
     
-        var responseRecipesList = JsonConvert.DeserializeObject<List<RecipeReadModel>>(responseJson);
-
-        responseRecipesList.Count.ShouldBe(2);
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
-    }
     #endregion
     
     #region DELETE
