@@ -29,9 +29,9 @@ public class SearchRecipesHandler : IQueryHandler<SearchRecipes,PagedResult<Reci
 
         var totalCount = dbQuery.Count();
         
-        if (query.SearchPhrase is not null)
+        if (query.SearchByRecipeName is not null)
         {
-            dbQuery = dbQuery.Where(r => r.Name.Contains(query.SearchPhrase));
+            dbQuery = dbQuery.Where(r => r.Name.Contains(query.SearchByRecipeName));
         }
         
         if (query.SearchByUserName is not null)
