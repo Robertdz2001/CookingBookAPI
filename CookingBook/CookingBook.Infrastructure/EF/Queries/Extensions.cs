@@ -15,6 +15,8 @@ public static class Extensions
             Calories = readModel.Calories,
             CreatedDate = readModel.CreatedDate,
             RecipeRating = readModel.RecipeRating,
+            User = readModel.User.AsDto(),
+            
 
             Tools = readModel.Tools.Select(t => new ToolDto
             {
@@ -40,12 +42,7 @@ public static class Extensions
                 Content = r.Content,
                 CreatedDate = r.CreatedDate,
                 Rate = r.Rate,
-                User = new UserDto
-                {
-                    Id = r.User.Id,
-                    UserName = r.User.UserName,
-                    UserRating = r.User.UserRating
-                }
+                User = r.User.AsDto()
             })
 
         };
@@ -55,6 +52,8 @@ public static class Extensions
         {
             Id = readModel.Id,
             UserName = readModel.UserName,
-            UserRating = readModel.UserRating
+            UserRating = readModel.UserRating,
+            RoleId = readModel.RoleId,
+            ImageUrl = readModel.ImageUrl
         };
 }

@@ -35,7 +35,7 @@ public class ChangeUserRoleHandlerTests
     {
         var command = new ChangeUserRole(Guid.NewGuid(), 1);
     
-        var user = new Domain.Entities.User(command.Id, "UserName", "PasswordHash");
+        var user = new Domain.Entities.User(command.Id, "UserName","Url", "PasswordHash");
     
         _repository.GetAsync(command.Id).Returns(user);
         

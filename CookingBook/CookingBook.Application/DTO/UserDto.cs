@@ -6,4 +6,8 @@ public class UserDto
     public string UserName { get; set; }
     public short UserRating { get; set; }
     
+    public int RoleId { get; set; }
+    
+    public string ImageUrl { get; set; }
+    
 }

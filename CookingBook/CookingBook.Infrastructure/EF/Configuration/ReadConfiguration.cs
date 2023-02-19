@@ -85,7 +85,8 @@ internal sealed class ReadConfiguration: IEntityTypeConfiguration<Role>,IEntityT
              {
                  Id = uid,
                  UserName = "Bill",
-                 PasswordHash = "AQAAAAIAAYagAAAAEJ9Izg7Vu9QS7EbdzZZOWpf2B3ubMdSV7VbYwcL3apdXoXg9/N9uOlxH1K20XOz4BQ==", //12345
+                 PasswordHash = "AQAAAAIAAYagAAAAEJ9Izg7Vu9QS7EbdzZZOWpf2B3ubMdSV7VbYwcL3apdXoXg9/N9uOlxH1K20XOz4BQ==",//12345
+                 ImageUrl = "https://cdn-icons-png.flaticon.com/512/149/149071.png", 
                  RoleId = 2,
 
              },
@@ -94,6 +95,7 @@ internal sealed class ReadConfiguration: IEntityTypeConfiguration<Role>,IEntityT
                  Id = Guid.NewGuid(),
                  UserName = "John",
                  PasswordHash = "AQAAAAIAAYagAAAAEJ9Izg7Vu9QS7EbdzZZOWpf2B3ubMdSV7VbYwcL3apdXoXg9/N9uOlxH1K20XOz4BQ==",
+                 ImageUrl = "https://e7.pngegg.com/pngimages/178/595/png-clipart-user-profile-computer-icons-login-user-avatars-monochrome-black.png",
                  RoleId = 1,
                  Recipes = new List<RecipeReadModel>()
              }

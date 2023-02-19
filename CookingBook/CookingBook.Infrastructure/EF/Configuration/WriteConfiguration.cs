@@ -24,6 +24,9 @@ public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfi
         var userRatingConverter = new ValueConverter<UserRating, short>(ur => ur.Value,
             ur => new UserRating(ur));
         
+        var userImageUrlConverter = new ValueConverter<ImageUrl, string>(ur => ur.Value,
+            ur => new ImageUrl(ur));
+        
         builder
             .Property(u => u.Id)
             .HasConversion(id => id.Value, id => new UserId(id));
@@ -42,6 +45,11 @@ public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfi
              .Property(typeof(UserRating), "_userRating")
              .HasConversion(userRatingConverter)
              .HasColumnName("UserRating");
+         
+         builder
+             .Property(typeof(ImageUrl), "_imageUrl")
+             .HasConversion(userImageUrlConverter)
+             .HasColumnName("ImageUrl");
 
          builder.HasOne(u => u.Role)
                 .WithMany()
@@ -59,8 +67,8 @@ public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfi
         var recipeNameConverter = new ValueConverter<RecipeName, string>(rn => rn.Value,
             rn => new RecipeName(rn));
         
-        var recipeImageUrlConverter = new ValueConverter<RecipeImageUrl, string>(ri => ri.Value,
-            ri => new RecipeImageUrl(ri));
+        var recipeImageUrlConverter = new ValueConverter<ImageUrl, string>(ri => ri.Value,
+            ri => new ImageUrl(ri));
         
         var recipePrepTimeConverter = new ValueConverter<RecipePrepTime, ushort>(rp => rp.Value,
             rp => new RecipePrepTime(rp));
@@ -87,7 +95,7 @@ public class WriteConfiguration:IEntityTypeConfiguration<User>, IEntityTypeConfi
             .HasColumnName("Name");
         
         builder
-            .Property(typeof(RecipeImageUrl), "_imageUrl")
+            .Property(typeof(ImageUrl), "_imageUrl")
             .HasConversion(recipeImageUrlConverter)
             .HasColumnName("ImageUrl");
         

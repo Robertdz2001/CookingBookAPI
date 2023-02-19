@@ -9,6 +9,7 @@ public class RecipeDto
     public double Calories{ get; set; }
     public DateTime CreatedDate{ get; set; }
     
+    public UserDto User { get; set; }
     public short RecipeRating { get; set; }
     public IEnumerable<ToolDto> Tools{ get; set; }
     public IEnumerable<StepDto> Steps { get; set; }

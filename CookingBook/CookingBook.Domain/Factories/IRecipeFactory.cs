@@ -5,5 +5,5 @@ namespace CookingBook.Domain.Factories;
 
 public interface IRecipeFactory
 {
-    public Recipe Create(UserId userId ,RecipeId id, RecipeName name, RecipeImageUrl url, RecipePrepTime prepTime);
+    public Recipe Create(UserId userId ,RecipeId id, RecipeName name, ImageUrl url, RecipePrepTime prepTime);
 }

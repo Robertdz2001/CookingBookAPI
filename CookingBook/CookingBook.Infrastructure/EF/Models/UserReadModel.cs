@@ -10,6 +10,8 @@ public class UserReadModel
 
     public short UserRating { get; set; } = 0;
     
+    public string ImageUrl { get; set; }
+    
     public Role Role { get; set; }
 
     public int RoleId { get; set; } = 1;

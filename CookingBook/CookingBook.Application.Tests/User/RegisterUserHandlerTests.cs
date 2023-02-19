@@ -19,7 +19,7 @@ public class RegisterUserHandlerTests
     public async Task
         HandleAsync_Throws_UserAlreadyExistsException_When_There_Is_Already_User_With_The_Same_Name()
     {
-        var command = new RegisterUser(Guid.NewGuid(), "UserName", "Password", "Password");
+        var command = new RegisterUser(Guid.NewGuid(), "UserName", "Password","Url", "Password");
 
         _readService.ExistsByUserName(command.UserName).Returns(true);
 
@@ -34,7 +34,7 @@ public class RegisterUserHandlerTests
     public async Task
         HandleAsync_Throws_PasswordsDontMatchException_When_Password_And_ConfirmPassword_Do_Not_Match()
     {
-        var command = new RegisterUser(Guid.NewGuid(), "UserName", "Password", "Password1");
+        var command = new RegisterUser(Guid.NewGuid(), "UserName", "Password","Url", "Password1");
 
         _readService.ExistsByUserName(command.UserName).Returns(false);
 
@@ -49,13 +49,13 @@ public class RegisterUserHandlerTests
     public async Task
         HandleAsync_Calls_Repository_On_Success()
     {
-        var command = new RegisterUser(Guid.NewGuid(), "UserName", "Password", "Password");
+        var command = new RegisterUser(Guid.NewGuid(), "UserName", "Password","Url", "Password");
         
-        var user = new Domain.Entities.User(command.Id, command.UserName, "placeHolder");
+        var user = new Domain.Entities.User(command.Id, command.UserName,"Url", "placeHolder");
         
         _readService.ExistsByUserName(command.UserName).Returns(false);
 
-        _factory.Create(command.Id, command.UserName, "placeHolder", 1).ReturnsForAnyArgs(user);
+        _factory.Create(command.Id, command.UserName, "placeHolder", "Url",1).ReturnsForAnyArgs(user);
         
         _passwordHasher.HashPassword(user, command.Password).Returns("PasswordHash");
 

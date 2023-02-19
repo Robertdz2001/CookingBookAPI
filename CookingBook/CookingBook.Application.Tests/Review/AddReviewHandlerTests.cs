@@ -17,7 +17,7 @@ public class AddReviewHandlerTests
         var recipe = new Domain.Entities.Recipe(Guid.NewGuid(), Guid.NewGuid(),
             "Recipe", "Url", 30, DateTime.UtcNow);
 
-        var user = new Domain.Entities.User(recipe.UserId, "UserName", "Pass");
+        var user = new Domain.Entities.User(recipe.UserId, "UserName","Url", "Pass");
         
         _userContext.GetUserId.Returns(Guid.NewGuid());
 

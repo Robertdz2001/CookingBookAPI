@@ -18,6 +18,7 @@ public class GetRecipeHandler : IQueryHandler<GetRecipe,RecipeDto>
 
     public async Task<RecipeDto> HandleAsync(GetRecipe query)
         => await _recipes
+            .Include(r=>r.User)
             .Include(r => r.Ingredients)
             .Include(r => r.Steps)
             .Include(r => r.Tools)
