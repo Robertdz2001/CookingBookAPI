@@ -41,6 +41,15 @@ public class RecipeController : BaseController
         return OkOrNotFound(result);
     }
 
+    [AllowAnonymous]
+    [HttpGet("top")]
+    public async Task<ActionResult<IEnumerable<RecipeDto>>> GetTopRecipes()
+    {
+        var result = await _queryDispatcher.DispatchAsync(new GetTopRecipes());
+
+        return Ok(result);
+    }
+
     [HttpDelete("{id:guid}")]
 
     public async Task<IActionResult> DeleteRecipe([FromRoute] Guid id)

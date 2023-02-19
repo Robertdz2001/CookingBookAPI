@@ -6,11 +6,11 @@ namespace CookingBook.Application.Queries;
 
 public class SearchRecipes : IQuery<PagedResult<RecipeDto>>
 {
-    public string? SearchPhrase { get; set; }
+    public string? SearchByRecipeName { get; set; }
     
     public string? SearchByUserName { get; set; }
     public SortByOptions SortBy { get; set; } = SortByOptions.Rating;
-    public bool SortByDescending { get; set; } = false;
+    public bool SortByDescending { get; set; } = true;
     public int PageNumber { get; set; } = 1;
     public int PageSize { get; set; } = 5;
 

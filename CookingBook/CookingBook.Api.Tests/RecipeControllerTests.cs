@@ -6,9 +6,9 @@ public class RecipeControllerTests: IClassFixture<WebApplicationFactory<Program>
 {
     #region GET
     [Theory]
-    [InlineData("?SearchPhrase=Recipe1&SortBy=3&SortByDescending=true&PageNumber=1&PageSize=20",1)]
-    [InlineData("?SearchPhrase=Recipe&SortBy=3&SortByDescending=true&PageNumber=1&PageSize=20",2)]
-    [InlineData("?SearchPhrase=Recipe3&SortBy=3&SortByDescending=true&PageNumber=1&PageSize=20",0)]
+    [InlineData("?SearchByRecipeName=Recipe1&SortBy=3&SortByDescending=true&PageNumber=1&PageSize=20",1)]
+    [InlineData("?SearchByRecipeName=Recipe&SortBy=3&SortByDescending=true&PageNumber=1&PageSize=20",2)]
+    [InlineData("?SearchByRecipeName=Recipe3&SortBy=3&SortByDescending=true&PageNumber=1&PageSize=20",0)]
     [InlineData("?SortBy=3&SortByDescending=true&PageNumber=1&PageSize=1",1)]
     [InlineData("",2)]
     public async Task
