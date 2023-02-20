@@ -27,7 +27,7 @@ public class SearchRecipesHandler : IQueryHandler<SearchRecipes,PagedResult<Reci
             .ThenInclude(r=>r.User)
             .AsQueryable();
 
-        var totalCount = dbQuery.Count();
+        
         
         if (query.SearchByRecipeName is not null)
         {
@@ -38,6 +38,8 @@ public class SearchRecipesHandler : IQueryHandler<SearchRecipes,PagedResult<Reci
         {
             dbQuery = dbQuery.Where(r => r.User.UserName.Contains(query.SearchByUserName));
         }
+        
+        var totalCount = dbQuery.Count();
         
         var columnsSelector = new Dictionary<SortByOptions?, Expression<Func<RecipeReadModel, object>>>
             {
