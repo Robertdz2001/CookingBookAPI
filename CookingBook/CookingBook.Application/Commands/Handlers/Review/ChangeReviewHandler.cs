@@ -2,6 +2,7 @@
 using CookingBook.Application.Exceptions;
 using CookingBook.Application.Services;
 using CookingBook.Domain;
+using CookingBook.Domain.Entities;
 using CookingBook.Shared.Abstractions.Commands;
 
 namespace CookingBook.Application.Commands.Handlers.Review;
@@ -31,7 +32,7 @@ public class ChangeReviewHandler : ICommandHandler<ChangeReview>
 
         var reviewToChange = recipe.GetReview(command.ReviewToChange);
 
-        if ((Guid)reviewToChange.UserId != _userContext.GetUserId)
+        if ((Guid)reviewToChange.UserId != _userContext.GetUserId && _userContext.GetUserRole!="Admin")
         {
             throw new ForbidException();
         }
