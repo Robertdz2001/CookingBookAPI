@@ -52,7 +52,7 @@ public class SearchRecipesHandler : IQueryHandler<SearchRecipes,PagedResult<Reci
 
             var sortByExpression = columnsSelector[query.SortBy];
 
-            dbQuery = query.SortByDescending ? dbQuery.OrderByDescending(sortByExpression) : dbQuery.OrderBy(sortByExpression);
+            dbQuery = query.SortByDescending ? dbQuery.OrderByDescending(sortByExpression).ThenByDescending(r=>r.Id) : dbQuery.OrderBy(sortByExpression).ThenBy(r=>r.Id);
         
 
         var result = await dbQuery
