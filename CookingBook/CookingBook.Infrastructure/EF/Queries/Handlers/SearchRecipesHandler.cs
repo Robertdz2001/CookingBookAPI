@@ -31,12 +31,12 @@ public class SearchRecipesHandler : IQueryHandler<SearchRecipes,PagedResult<Reci
         
         if (query.SearchByRecipeName is not null)
         {
-            dbQuery = dbQuery.Where(r => r.Name.Contains(query.SearchByRecipeName));
+            dbQuery = dbQuery.Where(r => r.Name.ToLower().Contains(query.SearchByRecipeName.ToLower()));
         }
         
         if (query.SearchByUserName is not null)
         {
-            dbQuery = dbQuery.Where(r => r.User.UserName.Contains(query.SearchByUserName));
+            dbQuery = dbQuery.Where(r => r.User.UserName.ToLower().Contains(query.SearchByUserName.ToLower()));
         }
         
         var totalCount = dbQuery.Count();
